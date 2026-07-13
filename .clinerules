@@ -1,0 +1,102 @@
+# Cline Rules — Meta Dashboard Pipeline
+
+This file governs how Cline should behave in this repository. Read it fully
+before doing any work, and follow it even if a request seems to imply
+otherwise.
+
+## Accept Structured Prompts
+If a prompt follows the standard six-part structure (starting with Context →
+Scope → Files to touch → Constraints → Acceptance criteria → Stop
+conditions), you are free to begin working in Act mode.
+
+## Otherwise, Discuss First, Then Act
+
+If a prompt is not a structured prompt, then before writing or editing any
+code:
+1. Restate your understanding of the task in plain English.
+2. Ask any clarifying questions you have.
+3. Propose your approach (files to touch, what changes, what you won't touch).
+4. Wait for explicit confirmation before switching to Act mode or creating/
+   editing files.
+
+Do not start implementing as your first response to a task, even a small one.
+"Yes, go ahead" or equivalent confirmation is required before you touch the
+filesystem. Do not auto-transition from Plan to Act without that
+confirmation, even if auto-approval is enabled in settings.
+
+While working, build, test, and confirm one piece at a time. Do not chain
+multiple pieces together without checking in between.
+
+## Project Context
+
+A Python ETL pipeline pulling Meta (Facebook/Instagram) Graph API data into
+CSVs for a year-over-year performance dashboard. Currently only FB Page
+Insights is wired up; Instagram and Ads extraction are anticipated (see
+`.env.example`) but not yet built.
+
+`meta_extract.py`, `meta_common.py`, `meta_auth.py`, `meta_preflight.py` are
+file names from an earlier, separate proof-of-concept and are out of scope —
+this pipeline uses `src/extraction/auth.py`, `config_loader.py`, and
+`fb_page_insights.py` instead.
+
+Reference docs:
+- `docs/PROJECT_DESCRIPTION.md` — current architecture and state
+- `docs/ROADMAP.md` — sequenced next steps
+
+## Design Decisions
+
+- **Pattern per data source:** `fetch_raw()` → `parse()` → `extract()` (combines
+  fetch+parse) → `write_csv()`. Follow this for any new extraction module
+  (Instagram, Ads) rather than inventing a new shape.
+- **Time grains:** Daily, weekly, monthly, yearly must be pulled as **separate
+  API calls** with the appropriate `period`/`time_increment` parameter. Reach is
+  deduplicated and not additive — never sum daily values to approximate a
+  longer period.
+- **HTTP:** Manual pagination via `paging.next`, using `urllib` (no requests/httpx
+  unless explicitly approved — see dependency rule below).
+- **Secrets:** Loaded only via `.env` through `python-dotenv` and the existing
+  `config_loader` pattern. Never hardcode secrets. Never read, print, or log
+  `.env` contents or secret values, even for debugging.
+- **Diagnostic output redaction:** Any script that prints or saves API
+  responses (including in `scripts/`) must redact tokens/secrets from both
+  URLs and response bodies before printing or writing to a file.
+- **Testing:** No piece is "done" without a corresponding test file. Tests go
+  in `tests/`, mirroring the module being tested.
+- **Dependencies:** Only what's already in `requirements.txt`. Do not add a
+  new dependency without flagging it first and getting confirmation.
+- **Diagnostic output redaction:** Any script that prints or saves an API
+  response (this applies especially to `scripts/`) must redact tokens and
+  other secret values from both the URL and the response body before
+  printing or writing it anywhere.
+
+## Default Scope Boundaries
+
+Unless a specific task explicitly says otherwise, do **not**:
+- Modify the repo structure (no new top-level folders, no renaming existing ones)
+- Add dependencies not already in `requirements.txt` without flagging first
+- Touch `.env` or print/log its contents
+- Implement anything beyond the current piece's stated scope — e.g. don't add
+  per-post data, extra time grains, retry/backoff, or new endpoints "while
+  you're in there," even if you notice a related gap
+- Port over code from the old proof-of-concept repo wholesale — pattern
+  inspiration is fine if explicitly asked for, wholesale reuse is not
+
+Known deferred gaps (do not silently fix unless asked): no retry/backoff for
+transient Graph API errors (code 2 / 80002), missing-vs-zero ambiguity in
+Page Insights values.
+
+## Stop and Ask
+
+Stop and ask rather than assuming if, during a task, you find you need to:
+- Add a new dependency not already in `requirements.txt`
+- Create a file outside the paths given for that task
+- Make a structural or architectural decision not covered by this file or
+  the task description
+- Touch a data source or time grain not explicitly in scope for the current piece
+
+## Style
+
+- Plain English explanation of *why* before *how*, especially for anything
+  touching API quirks or data correctness (e.g. reach deduplication).
+- When there's a genuine choice to make, present options with a clear
+  recommendation and reasoning — don't silently pick one and move on.

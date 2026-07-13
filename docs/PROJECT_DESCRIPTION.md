@@ -1,0 +1,114 @@
+# Meta Dashboard Pipeline — Project Description
+
+_Last updated: July 2026, following a full repo survey._
+
+## Purpose
+
+A Python ETL pipeline that pulls organic and paid performance data from
+Meta's Graph API (Facebook Page Insights, Instagram Media Insights, Ads
+Insights) into BigQuery, powering a dashboard that answers: **"How is our
+Meta performance trending year-over-year, and what's driving the change?"**
+
+## Architecture
+
+```
+Meta Dashboard Pipeline/
+├── .env.example
+├── .gitignore
+├── CLAUDE.md                 # governs agent behavior in this repo
+├── requirements.txt
+├── docs/
+│   ├── PROJECT_DESCRIPTION.md   (this file)
+│   ├── ROADMAP.md
+│   └── deepseek_prompting_best_practices.md
+├── config/                    # reserved, currently empty
+├── scripts/                   # diagnostic / one-off, not pipeline code
+│   ├── diagnose_all_page_metrics.py
+│   ├── diagnose_candidate_page_metrics.py
+│   ├── diagnose_page_fans.py
+│   ├── diagnose_token_190.py
+│   └── run_fb_page_extraction.py
+├── src/
+│   ├── extraction/
+│   │   ├── auth.py            # Page Access Token resolution via /me/accounts
+│   │   ├── config_loader.py   # loads/validates .env credentials
+│   │   └── fb_page_insights.py # fetch/parse/extract/write_csv for FB Page insights
+│   ├── transformation/        # reserved, currently empty
+│   └── loading/                # reserved, currently empty
+└── tests/
+    ├── test_auth.py
+    ├── test_config_loader.py
+    └── test_fb_page_insights.py
+```
+
+## Design Decisions (Locked)
+
+- **API version:** v25.0, pinned. Do not bump without explicit request.
+- **Extraction pattern per data source:** `fetch_raw()` → `parse()` →
+  `extract()` (composes fetch+parse) → `write_csv()`.
+- **Auth:** Single `SYSTEM_USER_TOKEN`, exchanged for a Page Access Token via
+  `/me/accounts` (`auth.py`). No app ID/secret flow — this matches actual
+  Business Manager setup, not the generic OAuth pattern in most docs.
+- **HTTP:** `urllib`, manual pagination via `paging.next`. No `requests`/`httpx`
+  unless explicitly approved.
+- **Secrets:** `python-dotenv` + `.env`, never hardcoded, never printed or
+  logged — including in diagnostic script output, which must be redacted.
+- **Testing:** No piece is "done" without a passing test file in `tests/`.
+- **Time grains:** Daily/weekly/monthly/yearly must be pulled as **separate**
+  API calls — reach is deduplicated and not additive across periods.
+- **Scope discipline:** Post-level metrics, Instagram, and Ads are each
+  separate pieces of work, not bundled into whatever's currently being built.
+
+## Current State
+
+- **FB Page Insights extraction:** built and tested. `auth.py`,
+  `config_loader.py`, `fb_page_insights.py` — 17 tests passing.
+- **Page metrics availability:** confirmed via `diagnose_all_page_metrics.py`
+  — 37 of 80 Page-level metrics succeed on v25.0; 43 fail (mostly the
+  deprecated `page_impressions_*` / `page_fans_*` / `page_posts_impressions_*`
+  families, plus 4 monetization metrics requiring admin access). The
+  pipeline's actual metrics (`reach`, `impressions`, `page_views`,
+  `follower_count`) are not in the failing set.
+- **Instagram Media extraction:** not started. `IG_USER_ID` exists in config
+  but has no corresponding extraction module yet.
+- **Ads Insights extraction:** not started. `AD_ACCOUNT_ID` exists in config
+  (optional, meant to be auto-discovered) but has no corresponding code yet.
+- **Transformation layer:** not started (`src/transformation/` empty).
+- **BigQuery loading layer:** not started (`src/loading/` empty).
+- **Version control:** repo is **not yet a git repository** — no commit
+  history exists.
+- **Packaging:** no `__init__.py` files anywhere; tests and scripts use
+  `sys.path.insert()` to make imports work rather than a proper package
+  structure. Not currently causing problems, but worth revisiting before the
+  codebase grows further.
+
+## Known Deferred Gaps (intentional — do not silently fix)
+
+- No retry/backoff for transient Graph API errors (code 2 / Instagram code
+  80002).
+- Missing-vs-zero ambiguity: an empty insights value for a given day is
+  currently indistinguishable from a real zero.
+- Ads Insights reach-summation correctness (reach is deduplicated; summing
+  daily values across a range double-counts).
+- No re-fetch mechanism for Meta's ~28-day data-finalization lag.
+
+## Open Questions (as of last survey — resolve opportunistically)
+
+1. What did `diagnose_token_190.py` actually find? No output was saved.
+2. What did `diagnose_candidate_page_metrics.py` find for the 8 candidate
+   metrics it tested? No output was saved.
+3. Did the Page-token exchange actually change the outcome for `page_fans` in
+   `diagnose_page_fans.py`? No output was saved.
+4. Has `run_fb_page_extraction.py` ever completed a successful end-to-end
+   run? No CSV output or log currently exists in the repo.
+
+## Working Method & Tools
+
+- **DeepSeek** (terminal coding agent) — primary execution environment for
+  writing and running pipeline code. Replaced Claude Code as of mid-2026.
+- **Claude** — prompt engineering only. Claude designs structured prompts for
+  DeepSeek to execute; Claude does not write or run pipeline code directly.
+- **`CLAUDE.md`** — governs DeepSeek's behavior in this repo (discuss-before-act
+  for unstructured requests, scope discipline, secret-handling rules).
+- **`docs/deepseek_prompting_best_practices.md`** — prompting patterns
+  specific to working with DeepSeek's harness/modes.
