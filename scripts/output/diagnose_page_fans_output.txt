@@ -1,0 +1,66 @@
+=== Call 1: page_fans with System User token (current pipeline behavior) ===
+URL: https://graph.facebook.com/v25.0/145245558842140/insights?metric=page_fans&period=day&access_token=***REDACTED***
+Status: 400
+{
+  "error": {
+    "message": "(#100) The value must be a valid insights metric",
+    "type": "OAuthException",
+    "code": 100,
+    "fbtrace_id": "AFFB0-HuDw219T_3nwliaUy"
+  }
+}
+
+error.code: 100
+error.error_subcode: None
+error.message: (#100) The value must be a valid insights metric
+
+=== Call 2: exchange for Page access token via /me/accounts ===
+URL: https://graph.facebook.com/v25.0/me/accounts?access_token=***REDACTED***
+Status: 200
+{
+  "data": [
+    {
+      "access_token": "***REDACTED***",
+      "category": "Recreation & sports website",
+      "category_list": [
+        {
+          "id": "2710",
+          "name": "Recreation & sports website"
+        }
+      ],
+      "name": "J. Stockard Fly Fishing",
+      "id": "145245558842140",
+      "tasks": [
+        "ADVERTISE",
+        "ANALYZE",
+        "CREATE_CONTENT",
+        "MESSAGING",
+        "MODERATE",
+        "MANAGE",
+        "VIEW_MONETIZATION_INSIGHTS"
+      ]
+    }
+  ],
+  "paging": {
+    "cursors": {
+      "before": "QVFIU0pSSGpha3dLR2hvMHJyVXpmT1gwelZApQm1kNWVONDJxZAzRzQ0ZAIUFF5ZA2swMkJoY3ZAKM2pvak5UclhUNGtta09OaS1zQmhVWGVJSEowcXh1V2dMX0hR",
+      "after": "QVFIU0pSSGpha3dLR2hvMHJyVXpmT1gwelZApQm1kNWVONDJxZAzRzQ0ZAIUFF5ZA2swMkJoY3ZAKM2pvak5UclhUNGtta09OaS1zQmhVWGVJSEowcXh1V2dMX0hR"
+    }
+  }
+}
+
+=== Call 3: page_fans with exchanged Page access token (POC behavior) ===
+URL: https://graph.facebook.com/v25.0/145245558842140/insights?metric=page_fans&period=day&access_token=***REDACTED***
+Status: 400
+{
+  "error": {
+    "message": "(#100) The value must be a valid insights metric",
+    "type": "OAuthException",
+    "code": 100,
+    "fbtrace_id": "AlL_ZDmAFzIsZZxlHSfAkwg"
+  }
+}
+
+error.code: 100
+error.error_subcode: None
+error.message: (#100) The value must be a valid insights metric

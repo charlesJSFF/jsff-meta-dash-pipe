@@ -1,0 +1,166 @@
+page_tab_views_login_top_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_tab_views_login_top: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_tab_views_logout_top: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_total_actions: SUCCESS
+page_post_engagements: SUCCESS
+page_fan_adds_by_paid_non_paid_unique: SUCCESS
+page_lifetime_engaged_followers_unique: SUCCESS
+page_daily_follows: SUCCESS
+page_daily_follows_unique: SUCCESS
+page_daily_unfollows_unique: SUCCESS
+page_follows: SUCCESS
+page_impressions: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_impressions_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_impressions_paid: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_impressions_paid_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_impressions_viral: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_impressions_viral_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_impressions_nonviral: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_impressions_nonviral_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_media_view: SUCCESS
+page_total_media_view_unique: SUCCESS
+page_posts_impressions: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_impressions_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_impressions_paid: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_impressions_paid_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_impressions_organic_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_served_impressions_organic_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_impressions_viral: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_impressions_viral_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_impressions_nonviral: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_posts_impressions_nonviral_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_actions_post_reactions_like_total: SUCCESS
+page_actions_post_reactions_love_total: SUCCESS
+page_actions_post_reactions_wow_total: SUCCESS
+page_actions_post_reactions_haha_total: SUCCESS
+page_actions_post_reactions_sorry_total: SUCCESS
+page_actions_post_reactions_anger_total: SUCCESS
+page_actions_post_reactions_total: SUCCESS
+page_fans: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_fans_locale: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_fans_city: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_fans_country: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_fan_adds: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_fan_adds_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_fan_removes: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_fan_removes_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_video_views: SUCCESS
+page_video_views_by_uploaded_hosted: SUCCESS
+page_video_views_paid: SUCCESS
+page_video_views_organic: SUCCESS
+page_video_views_by_paid_non_paid: SUCCESS
+page_video_views_autoplayed: SUCCESS
+page_video_views_click_to_play: SUCCESS
+page_video_views_unique: SUCCESS
+page_video_repeat_views: SUCCESS
+page_video_complete_views_30s: SUCCESS
+page_video_complete_views_30s_paid: SUCCESS
+page_video_complete_views_30s_organic: SUCCESS
+page_video_complete_views_30s_autoplayed: SUCCESS
+page_video_complete_views_30s_click_to_play: SUCCESS
+page_video_complete_views_30s_unique: SUCCESS
+page_video_complete_views_30s_repeat_views: SUCCESS
+page_video_views_10s: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_video_views_10s_paid: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_video_views_10s_organic: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_video_views_10s_autoplayed: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_video_views_10s_click_to_play: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_video_views_10s_unique: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_video_views_10s_repeat: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_video_view_time: SUCCESS
+page_uploaded_3s_to_15s_views_rate: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_uploaded_views_15s_count: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_uploaded_views_60s_excludes_shorter_unique_count_by_is_60s_returning_viewer: FAIL code=100 subcode=None msg=(#100) The value must be a valid insights metric
+page_views_total: SUCCESS
+page_daily_video_ad_break_ad_impressions_by_crosspost_status: FAIL code=200 subcode=None msg=(#200) Monetization metrics are only visible for Page admins with access to monetization insights.
+page_daily_video_ad_break_cpm_by_crosspost_status: FAIL code=200 subcode=None msg=(#200) Monetization metrics are only visible for Page admins with access to monetization insights.
+page_daily_video_ad_break_earnings_by_crosspost_status: FAIL code=200 subcode=None msg=(#200) Monetization metrics are only visible for Page admins with access to monetization insights.
+creator_monetization_qualified_views: FAIL code=200 subcode=None msg=(#200) Monetization metrics are only visible for Page admins with access to monetization insights.
+content_monetization_earnings: SUCCESS
+monetization_approximate_earnings: SUCCESS
+
+=== Summary: 37 succeeded, 43 failed (of 80) ===
+
+Succeeded:
+  page_total_actions
+  page_post_engagements
+  page_fan_adds_by_paid_non_paid_unique
+  page_lifetime_engaged_followers_unique
+  page_daily_follows
+  page_daily_follows_unique
+  page_daily_unfollows_unique
+  page_follows
+  page_media_view
+  page_total_media_view_unique
+  page_actions_post_reactions_like_total
+  page_actions_post_reactions_love_total
+  page_actions_post_reactions_wow_total
+  page_actions_post_reactions_haha_total
+  page_actions_post_reactions_sorry_total
+  page_actions_post_reactions_anger_total
+  page_actions_post_reactions_total
+  page_video_views
+  page_video_views_by_uploaded_hosted
+  page_video_views_paid
+  page_video_views_organic
+  page_video_views_by_paid_non_paid
+  page_video_views_autoplayed
+  page_video_views_click_to_play
+  page_video_views_unique
+  page_video_repeat_views
+  page_video_complete_views_30s
+  page_video_complete_views_30s_paid
+  page_video_complete_views_30s_organic
+  page_video_complete_views_30s_autoplayed
+  page_video_complete_views_30s_click_to_play
+  page_video_complete_views_30s_unique
+  page_video_complete_views_30s_repeat_views
+  page_video_view_time
+  page_views_total
+  content_monetization_earnings
+  monetization_approximate_earnings
+
+Failed:
+  page_tab_views_login_top_unique
+  page_tab_views_login_top
+  page_tab_views_logout_top
+  page_impressions
+  page_impressions_unique
+  page_impressions_paid
+  page_impressions_paid_unique
+  page_impressions_viral
+  page_impressions_viral_unique
+  page_impressions_nonviral
+  page_impressions_nonviral_unique
+  page_posts_impressions
+  page_posts_impressions_unique
+  page_posts_impressions_paid
+  page_posts_impressions_paid_unique
+  page_posts_impressions_organic_unique
+  page_posts_served_impressions_organic_unique
+  page_posts_impressions_viral
+  page_posts_impressions_viral_unique
+  page_posts_impressions_nonviral
+  page_posts_impressions_nonviral_unique
+  page_fans
+  page_fans_locale
+  page_fans_city
+  page_fans_country
+  page_fan_adds
+  page_fan_adds_unique
+  page_fan_removes
+  page_fan_removes_unique
+  page_video_views_10s
+  page_video_views_10s_paid
+  page_video_views_10s_organic
+  page_video_views_10s_autoplayed
+  page_video_views_10s_click_to_play
+  page_video_views_10s_unique
+  page_video_views_10s_repeat
+  page_uploaded_3s_to_15s_views_rate
+  page_uploaded_views_15s_count
+  page_uploaded_views_60s_excludes_shorter_unique_count_by_is_60s_returning_viewer
+  page_daily_video_ad_break_ad_impressions_by_crosspost_status
+  page_daily_video_ad_break_cpm_by_crosspost_status
+  page_daily_video_ad_break_earnings_by_crosspost_status
+  creator_monetization_qualified_views

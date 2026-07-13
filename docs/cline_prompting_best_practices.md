@@ -87,3 +87,12 @@ back to `.clinerules`, `docs/PROJECT_DESCRIPTION.md`, and `docs/ROADMAP.md`
 explicitly in prompts for new pieces of work, especially after a gap in
 activity — treat each new prompt as if Cline is seeing the repo fresh, since
 the model or Cline version may have changed since the last session.
+
+## Reinforce single-action pacing in the prompt itself
+
+Even though `.clinerules` states this as a standing rule, restate it
+explicitly in prompts for this project: "Complete one command or one
+question per turn. Do not queue or bundle a second action until the first
+has been confirmed." DeepSeek (particularly flash-tier) tends to bundle or
+stall when multiple tool calls are queued in one turn, so don't rely on the
+rules file alone to prevent this.

@@ -27,6 +27,28 @@ confirmation, even if auto-approval is enabled in settings.
 While working, build, test, and confirm one piece at a time. Do not chain
 multiple pieces together without checking in between.
 
+## Shell Compatibility
+
+This environment runs PowerShell, not bash/sh. Do not use bash-specific
+syntax:
+- Use `;` to chain commands, not `&&`
+- Use `Get-ChildItem` / `dir`, not `ls`
+- Use `Copy-Item`, not `cp`; `Remove-Item`, not `rm`
+- Use `$env:VAR_NAME`, not `$VAR_NAME` or `export VAR_NAME=`
+- Use PowerShell-style path separators and quoting; avoid heredocs and
+  bash-only redirection tricks
+
+If a task genuinely requires a Unix-only tool, flag it and ask before
+assuming an equivalent exists or substituting silently.
+
+## One Action at a Time
+
+Do not bundle multiple tool calls, commands, or questions into a single
+turn. Run or ask exactly one thing, then stop and wait for the result or
+confirmation before proceeding to the next step — even if the next step
+seems obvious or low-risk. Do not queue a second command while a first is
+still pending. This applies in both Plan and Act mode.
+
 ## Project Context
 
 A Python ETL pipeline pulling Meta (Facebook/Instagram) Graph API data into

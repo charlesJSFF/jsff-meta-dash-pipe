@@ -32,7 +32,7 @@ REALISTIC_RESPONSE = {
             ],
         },
         {
-            "name": "page_views",
+            "name": "page_views_total",
             "period": "day",
             "values": [
                 {"value": 5, "end_time": "2026-06-18T07:00:00+0000"},
@@ -60,14 +60,14 @@ def test_parses_realistic_response_into_expected_rows():
             "date": "2026-06-18",
             "reach": 100,
             "impressions": 200,
-            "page_views": 5,
+            "page_views_total": 5,
             "follower_count": 1000,
         },
         {
             "date": "2026-06-19",
             "reach": 110,
             "impressions": 210,
-            "page_views": 7,
+            "page_views_total": 7,
             "follower_count": 1001,
         },
     ]
@@ -86,7 +86,7 @@ def test_handles_response_missing_one_metric_without_crashing():
         assert "follower_count" not in row
         assert row["reach"] is not None
         assert row["impressions"] is not None
-        assert row["page_views"] is not None
+        assert row["page_views_total"] is not None
 
 
 def test_fetch_passes_correct_date_range_and_params(monkeypatch):
@@ -104,7 +104,7 @@ def test_fetch_passes_correct_date_range_and_params(monkeypatch):
         since="2026-06-12",
         until="2026-06-18",
         period="day",
-        metrics=("reach", "impressions", "page_views", "follower_count"),
+        metrics=("reach", "impressions", "page_views_total", "follower_count"),
         limit=100,
     )
 
@@ -115,7 +115,7 @@ def test_fetch_passes_correct_date_range_and_params(monkeypatch):
     assert "until=2026-06-18" in url
     assert "period=day" in url
     assert "limit=100" in url
-    assert "metric=reach%2Cimpressions%2Cpage_views%2Cfollower_count" in url
+    assert "metric=reach%2Cimpressions%2Cpage_views_total%2Cfollower_count" in url
 
 
 def test_extract_page_insights_combines_fetch_and_parse(monkeypatch):

@@ -1,7 +1,7 @@
 """
 Facebook Page Insights extraction.
 
-Pulls daily Page-level insights (reach, impressions, page_views,
+Pulls daily Page-level insights (reach, impressions, page_views_total,
 follower_count) from `/{page-id}/insights` for an explicit date range and
 flattens them into one row per day, with metrics as columns.
 
@@ -24,7 +24,7 @@ from typing import Dict, Iterable, List, Optional, Sequence, Union
 GRAPH_API_VERSION = "v25.0"
 GRAPH_API_BASE = f"https://graph.facebook.com/{GRAPH_API_VERSION}"
 
-DEFAULT_METRICS: Sequence[str] = ("reach", "impressions", "page_views", "follower_count")
+DEFAULT_METRICS: Sequence[str] = ("reach", "impressions", "page_views_total", "follower_count")
 
 DateLike = Union[str, date]
 

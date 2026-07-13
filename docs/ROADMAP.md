@@ -12,10 +12,10 @@ _Last updated: July 2026, following a full repo survey._
 - [X] **Delete `docs/meta_api_reference.md` and
       `docs/relevant_api_reference.md`.** Confirmed not useful going
       forward — clean break, no replacement reference doc for now.
-- [ ] **Initialize git.** No commit history currently exists — no rollback
+- [X] **Initialize git.** No commit history currently exists — no rollback
       safety net for any of this. Should happen before new extraction
       modules get built, not after.
-- [ ] Close the three unresolved diagnostic-output gaps by rerunning each
+- [x] Close the three unresolved diagnostic-output gaps by rerunning each
       script and saving redacted output, mirroring the pattern
       diagnose_all_page_metrics.py already established:
   - diagnose_token_190.py — what did the 4 calls actually find about error 190?

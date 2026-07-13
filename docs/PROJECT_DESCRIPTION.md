@@ -67,7 +67,7 @@ Meta Dashboard Pipeline/
   — 37 of 80 Page-level metrics succeed on v25.0; 43 fail (mostly the
   deprecated `page_impressions_*` / `page_fans_*` / `page_posts_impressions_*`
   families, plus 4 monetization metrics requiring admin access). The
-  pipeline's actual metrics (`reach`, `impressions`, `page_views`,
+   pipeline's actual metrics (`reach`, `impressions`, `page_views_total`,
   `follower_count`) are not in the failing set.
 - **Instagram Media extraction:** not started. `IG_USER_ID` exists in config
   but has no corresponding extraction module yet.
@@ -92,13 +92,23 @@ Meta Dashboard Pipeline/
   daily values across a range double-counts).
 - No re-fetch mechanism for Meta's ~28-day data-finalization lag.
 
-## Open Questions (as of last survey — resolve opportunistically)
+## Open Questions (as of July 2026 — resolve opportunistically)
 
-1. What did `diagnose_token_190.py` actually find? No output was saved.
-2. What did `diagnose_candidate_page_metrics.py` find for the 8 candidate
-   metrics it tested? No output was saved.
-3. Did the Page-token exchange actually change the outcome for `page_fans` in
-   `diagnose_page_fans.py`? No output was saved.
+1. ~~What did `diagnose_token_190.py` actually find? No output was saved.~~
+   **Resolved.** The 4 calls confirmed that token (code 190) errors no longer
+   occur with the current SYSTEM_USER_TOKEN + Page Access Token exchange.
+   Saved output at `scripts/output/diagnose_token_190_output.txt`.
+2. ~~What did `diagnose_candidate_page_metrics.py` find for the 8 candidate
+   metrics it tested? No output was saved.~~
+   **Resolved.** All 8 candidate metrics succeeded on v25.0 — including the
+   one (`page_fans`) that had previously errored under the old token setup.
+   Saved output at `scripts/output/diagnose_candidate_page_metrics_output.txt`.
+3. ~~Did the Page-token exchange actually change the outcome for `page_fans` in
+   `diagnose_page_fans.py`? No output was saved.~~
+   **Resolved.** Yes — the Page Access Token resolved `page_fans`; the
+   raw SYSTEM_USER_TOKEN alone returned error code 190. Also surfaced
+   `page_views` → `page_views_total` as the API's canonical metric name.
+   Saved output at `scripts/output/diagnose_page_fans_output.txt`.
 4. Has `run_fb_page_extraction.py` ever completed a successful end-to-end
    run? No CSV output or log currently exists in the repo.
 
