@@ -122,3 +122,30 @@ Stop and ask rather than assuming if, during a task, you find you need to:
   touching API quirks or data correctness (e.g. reach deduplication).
 - When there's a genuine choice to make, present options with a clear
   recommendation and reasoning — don't silently pick one and move on.
+
+## Git Command Output Interpretation
+
+PowerShell sometimes wraps git's normal stderr output (progress messages,
+push confirmations) in a `NativeCommandError`, even when the git command
+itself succeeded (exit code 0). This is a PowerShell display quirk, not a
+git failure — do not report a git command as failed based on this wrapper
+alone.
+
+Before reporting a `git push`, `git commit`, or similar git command as
+failed:
+- Check for the actual success signal in the output — for `git push`, this
+  is the ref-update line (e.g. `abc123..def456  main -> main`); for
+  `git commit`, this is the "N files changed" summary line.
+- If that success signal is present, treat the command as successful
+  regardless of any `NativeCommandError` / `CategoryInfo: NotSpecified`
+  wrapper around it.
+- Only report a genuine failure if the actual success signal is absent, or
+  if the output explicitly shows a rejection (e.g. `! [rejected]`,
+  `non-fast-forward`, `Permission denied`, `fatal:`).
+- If uncertain whether a push actually succeeded, verify with a follow-up
+  `git push` (an "Everything up-to-date" response confirms the prior push
+  landed) rather than assuming failure and re-running destructive commands.
+
+## No Self-Initiated Verification Commands
+
+Do not run your own follow-up shell commands to verify work you just completed (e.g. re-reading an output file via python -c, cat, or similar) unless the task's acceptance criteria explicitly require it. If verification is genuinely needed, use the read-only file-view tool instead of a shell command, since shell commands may require manual approval that stalls the task. Report what you did and let the user confirm, rather than adding your own confirmation step.

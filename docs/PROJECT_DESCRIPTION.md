@@ -70,7 +70,12 @@ Meta Dashboard Pipeline/
    pipeline's actual metrics (`reach`, `impressions`, `page_views_total`,
   `follower_count`) are not in the failing set.
 - **Instagram Media extraction:** not started. `IG_USER_ID` exists in config
-  but has no corresponding extraction module yet.
+  but has no corresponding extraction module yet. Metric availability was
+  probed via `scripts/diagnose_all_ig_media_metrics.py` — **IMAGE**, **VIDEO**,
+  and **CAROUSEL_ALBUM** each support 7 of 10 candidate metrics (reach, saved,
+  likes, comments, shares, total_interactions, views). **REELS** and **STORY**
+  metric lists are defined but untested (no live Reels or Stories at probe
+  time).
 - **Ads Insights extraction:** not started. `AD_ACCOUNT_ID` exists in config
   (optional, meant to be auto-discovered) but has no corresponding code yet.
 - **Transformation layer:** not started (`src/transformation/` empty).
@@ -91,6 +96,13 @@ Meta Dashboard Pipeline/
 - Ads Insights reach-summation correctness (reach is deduplicated; summing
   daily values across a range double-counts).
 - No re-fetch mechanism for Meta's ~28-day data-finalization lag.
+- **Stories excluded from IG media-level insights.** The `/{ig-user-id}/media`
+  endpoint does not return Stories (active-only via `/{ig-user-id}/stories`,
+  no API access to archived Stories). Media-level extraction will therefore
+  miss Story performance entirely — a systematic gap for an account that runs
+  Stories frequently. Possible mitigations: daily `/{ig-user-id}/stories`
+  polling to capture per-Story insights before they expire, or relying on
+  account-level `/{ig-user-id}/insights` (scope: Phase 2).
 
 ## Open Questions (as of July 2026 — resolve opportunistically)
 

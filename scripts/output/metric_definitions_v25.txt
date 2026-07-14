@@ -1,0 +1,217 @@
+==============================================================================
+META GRAPH API v25.0 — PAGE INSIGHTS METRIC DEFINITIONS
+Source: https://developers.facebook.com/docs/graph-api/reference/v25.0/insights
+Retrieved: via offline HTML capture of versioned docs page
+Date: July 2026
+==============================================================================
+
+IMPORTANT: The asterisk (*) suffix on some metric names in the docs
+indicates the metric is refreshed several times during the day.
+
+------------------------------------------------------------------------------
+METRIC: page_total_actions
+------------------------------------------------------------------------------
+  Official Description:
+    The number of clicks on your Page's contact info and call-to-action button.
+  Supported Period(s): day, week, days_28
+  Caveats: None documented in table
+
+  Instagram Equivalent: total_interactions (Account Insights)
+  Confidence: likely equivalent
+  Notes: total_interactions in IG Account Insights combines likes, comments, shares, saves, profile visits, and follows. Documentation describes it as 'Total number of interactions with your Instagram account.'
+
+------------------------------------------------------------------------------
+METRIC: page_post_engagements
+------------------------------------------------------------------------------
+  Official Description:
+    The number of times people have engaged with your posts through reactions, comments, shares and more.
+  Supported Period(s): day, week, days_28
+  Caveats: Asterisk (*) = metric refreshed several times during the day
+
+  Instagram Equivalent: engagement (Media Insights) or total_interactions (Account Insights)
+  Confidence: close equivalent
+  Notes: engagement on IG Media = likes + comments + saves + video_views/plays. total_interactions is the account-level aggregate. IG does not have a single 'post engagements' metric that combines everything across all posts.
+
+------------------------------------------------------------------------------
+METRIC: page_daily_follows
+------------------------------------------------------------------------------
+  Official Description:
+    Not defined
+  Supported Period(s): day
+  Caveats: Asterisk (*) = metric refreshed several times during the day; Description says 'Not defined' in Meta docs (follows metrics)
+
+  Instagram Equivalent: follows (Account Insights)
+  Confidence: direct equivalent
+  Notes: IG follows metric tracks new follows (not net). Period: day, week, days_28. No 'unique' variant available.
+
+------------------------------------------------------------------------------
+METRIC: page_daily_follows_unique
+------------------------------------------------------------------------------
+  Official Description:
+    Not defined This metric is estimated .
+  Supported Period(s): day, week, days_28
+  Caveats: Asterisk (*) = metric refreshed several times during the day; Unique-user metric (deduplicated); Description says 'Not defined' in Meta docs (follows metrics); Estimated metric (based on modeling, not exact count)
+
+  Instagram Equivalent: follows (Account Insights) — IG doesn't separate unique vs total for follows
+  Confidence: partial equivalent
+  Notes: Page Insights splits follows by unique; IG only has total follows. The IG metric most closely approximates page_daily_follows (total).
+
+------------------------------------------------------------------------------
+METRIC: page_daily_unfollows_unique
+------------------------------------------------------------------------------
+  Official Description:
+    The number of Meta Accounts that unfollowed your Page in the selected time period. This metric is estimated .
+  Supported Period(s): day, week, days_28
+  Caveats: Asterisk (*) = metric refreshed several times during the day; Unique-user metric (deduplicated); Estimated metric (based on modeling, not exact count)
+
+  Instagram Equivalent: no equivalent found
+  Confidence: no known IG metric
+  Notes: IG Insights does not expose unfollows or unfollow counts as a metric, unique or otherwise.
+
+------------------------------------------------------------------------------
+METRIC: page_follows
+------------------------------------------------------------------------------
+  Official Description:
+    The number of followers of your Facebook Page or profile. This is calculated as the number of follows minus the number of unfollows over the lifetime of your Facebook Page or profile.
+  Supported Period(s): day
+  Caveats: Asterisk (*) = metric refreshed several times during the day
+
+  Instagram Equivalent: follower_count (Account Insights)
+  Confidence: direct equivalent
+  Notes: follower_count = total current followers (cumulative). This is a snapshot metric, not a delta. Period: day.
+
+------------------------------------------------------------------------------
+METRIC: page_media_view
+------------------------------------------------------------------------------
+  Official Description:
+    The number of times your content was played or displayed. Content includes videos, posts, stories and ads.
+  Supported Period(s): day, week, days_28
+  Caveats: Source: Page View Metrics table (nonstandard structure). Breakdowns: is_from_ads, is_from_followers
+
+  Instagram Equivalent: plays (Media Insights — Reels) or video_views (Media Insights — Videos)
+  Confidence: partial equivalent
+  Notes: IG has separate metrics for photo views (impressions) vs video plays/views. No single 'media view' aggregate that covers all content types (images + video + stories).
+
+------------------------------------------------------------------------------
+METRIC: page_total_media_view_unique
+------------------------------------------------------------------------------
+  Official Description:
+    The number of total unique media viewers for FB page.
+  Supported Period(s): day, week, days_28
+  Caveats: Source: Page View Metrics table (nonstandard structure). Breakdowns: (not specified)
+
+  Instagram Equivalent: reach (Media Insights or Account Insights)
+  Confidence: partial equivalent
+  Notes: reach on IG = unique accounts that saw the content. Close to 'unique viewers' concept. For account-level: reach. For per-media: reach (unique accounts that saw that post).
+
+------------------------------------------------------------------------------
+METRIC: page_actions_post_reactions_total
+------------------------------------------------------------------------------
+  Official Description:
+    Daily total post reactions of a page by type.
+  Supported Period(s): day
+  Caveats: None documented in table
+
+  Instagram Equivalent: likes + comments + saved + shares (Media Insights — individual metrics)
+  Confidence: partial equivalent
+  Notes: IG separates likes, comments, saves, shares into individual metrics rather than a single 'reactions' total. There is no combined 'reactions' or 'total actions' per-post metric.
+
+------------------------------------------------------------------------------
+METRIC: page_video_views
+------------------------------------------------------------------------------
+  Official Description:
+    The number of times your Page's videos played for at least 3 seconds, or for nearly their total length if they're shorter than 3 seconds. During a single instance of a video playing, we'll exclude any time spent replaying the video.
+  Supported Period(s): day, week, days_28
+  Caveats: None documented in table
+
+  Instagram Equivalent: plays (Media Insights — Reels) or video_views (Media Insights — Videos)
+  Confidence: direct equivalent
+  Notes: IG video_views (Video Posts): count of 3-second+ views. IG plays (Reels): count of initial plays. Different thresholds from FB Page video views (3-second depending on context).
+
+------------------------------------------------------------------------------
+METRIC: page_video_views_paid
+------------------------------------------------------------------------------
+  Official Description:
+    The number of times your Page's promoted videos played for at least 3 seconds, or for nearly their total length if they're shorter than 3 seconds. For each impression of a video, we'll count video views separately and exclude any time spent replaying the video.
+  Supported Period(s): day, week, days_28
+  Caveats: None documented in table
+
+  Instagram Equivalent: no equivalent found
+  Confidence: no known IG metric
+  Notes: IG Insights does not split video views by paid vs organic in the public available metrics. The paid/organic breakdown is available in Ads Manager, not the Insights API.
+
+------------------------------------------------------------------------------
+METRIC: page_video_views_organic
+------------------------------------------------------------------------------
+  Official Description:
+    The number of times your Page's videos played for at least 3 seconds, or for nearly their total length if they're shorter than 3 seconds, by organic reach. During a single instance of a video playing, we'll exclude any time spent replaying the video.
+  Supported Period(s): day, week, days_28
+  Caveats: None documented in table
+
+  Instagram Equivalent: no equivalent found
+  Confidence: no known IG metric
+  Notes: IG Insights does not split video views by paid vs organic in the public available metrics.
+
+------------------------------------------------------------------------------
+METRIC: page_video_view_time
+------------------------------------------------------------------------------
+  Official Description:
+    The total time, in milliseconds, people viewed your Page's video.
+  Supported Period(s): day
+  Caveats: None documented in table
+
+  Instagram Equivalent: video_views_time_played (Media Insights — Video)
+  Confidence: likely equivalent
+  Notes: IG Video Posts have video_views_time_played_total_ms as a per-media metric. However, there is no aggregate account-level video view time metric. This would need to be summed across individual media.
+
+------------------------------------------------------------------------------
+METRIC: page_views_total
+------------------------------------------------------------------------------
+  Official Description:
+    The number of times a Page's profile has been viewed by logged in and logged out people.
+  Supported Period(s): day, week, days_28
+  Caveats: Asterisk (*) = metric refreshed several times during the day
+
+  Instagram Equivalent: profile_views (Account Insights)
+  Confidence: partial equivalent
+  Notes: profile_views = total profile visits in IG Account Insights. page_views_total is broader — it includes all Page tab views (timeline, photos, about, etc.), not just the main profile view.
+
+==============================================================================
+INSTAGRAM INSIGHTS v25.0 — DOC ANALYSIS
+==============================================================================
+
+  Instagram Insights doc page appears to be JavaScript-rendered (React/SPA).
+  The fetched HTML contains no table elements, no metric <code> elements,
+  and the <body> has minimal text content (<1000 chars).
+  The actual documentation content is loaded client-side and not captured
+  by a simple HTTP GET.
+
+  Alternative approaches for getting IG metric definitions:
+    1. Fetch the unversioned page that may have SSG: /docs/instagram-api/reference/insights
+    2. Use the Business Content API docs: /docs/instagram-api/reference/v25.0/ig-user/insights
+    3. Accept known IG metric names from Meta API reference
+
+==============================================================================
+SUMMARY: IG EQUIVALENCE AT A GLANCE
+==============================================================================
+
+  Metric                                 IG Equivalent                       Confidence
+  -------------------------------------- ----------------------------------- ---------------
+  page_total_actions                     total_interactions (Account Insig   likely equiva
+  page_post_engagements                  engagement (Media Insights) or t    close equival
+  page_daily_follows                     follows (Account Insights)          direct equiva
+  page_daily_follows_unique              follows (Account Insights) — IG     partial equi
+  page_daily_unfollows_unique            no equivalent found                 no known IG m
+  page_follows                           follower_count (Account Insights    direct equiva
+  page_media_view                        plays (Media Insights — Reels) o    partial equi
+  page_total_media_view_unique           reach (Media Insights or Account    partial equi
+  page_actions_post_reactions_total      likes + comments + saved + share    partial equi
+  page_video_views                       plays (Media Insights — Reels) o    direct equiva
+  page_video_views_paid                  no equivalent found                 no known IG m
+  page_video_views_organic               no equivalent found                 no known IG m
+  page_video_view_time                   video_views_time_played (Media I    likely equiva
+  page_views_total                       profile_views (Account Insights)    partial equi
+
+==============================================================================
+END OF DOCUMENTATION LOOKUP
+==============================================================================

@@ -1,0 +1,142 @@
+=== IG Account-Level Insights — Complete Findings ===
+Generated: 2026-07-14
+Endpoint: GET /{ig-user-id}/insights (Graph API v25.0)
+Token: System User (no Page token exchange)
+
+==================================================
+SUMMARY
+==================================================
+Total metrics tested:         25
+Total metric+param combos:    77
+SUCCESS:                      17
+FAIL:                         60
+
+Working metrics:               15  (see below)
+Definitively unavailable:     10
+
+Key discovery: Many metrics that initially fail with
+period=days_28 or period=lifetime DO work with
+period=day AND metric_type=total_value combined.
+
+==================================================
+METRICS THAT WORK
+==================================================
+
+--- Time-series periods (no metric_type needed) ---
+
+  reach
+    period=day        -> SUCCESS
+    period=week       -> SUCCESS
+    period=days_28    -> SUCCESS
+    period=lifetime   -> FAIL (incompatible)
+
+  follower_count
+    period=day        -> SUCCESS
+    period=week       -> FAIL (incompatible)
+    period=days_28    -> FAIL (incompatible)
+    period=lifetime   -> FAIL (incompatible)
+    total_value+day   -> FAIL (metric_type incompatible)
+
+  online_followers
+    period=lifetime   -> SUCCESS (snapshot of currently-online followers)
+    period=day        -> FAIL (incompatible)
+
+--- Daily total_value (period=day + metric_type=total_value) ---
+
+  accounts_engaged      period=day, metric_type=total_value -> SUCCESS
+  total_interactions    period=day, metric_type=total_value -> SUCCESS
+  likes                 period=day, metric_type=total_value -> SUCCESS
+  comments              period=day, metric_type=total_value -> SUCCESS
+  saves                 period=day, metric_type=total_value -> SUCCESS
+  shares                period=day, metric_type=total_value -> SUCCESS
+  replies               period=day, metric_type=total_value -> SUCCESS
+  views                 period=day, metric_type=total_value -> SUCCESS
+  follows_and_unfollows period=day, metric_type=total_value -> SUCCESS
+  profile_links_taps    period=day, metric_type=total_value -> SUCCESS
+  profile_views         period=day, metric_type=total_value -> SUCCESS
+  website_clicks        period=day, metric_type=total_value -> SUCCESS
+
+  NOTE: Each of these 12 metrics ALSO failed with
+  period=days_28+total_value and period=lifetime+total_value.
+  ONLY period=day works.
+
+==================================================
+METRICS THAT DO NOT WORK (ALL COMBOS FAILED)
+==================================================
+
+--- Not recognised as valid metric names at this endpoint ---
+
+  impressions         "metric[0] must be one of the following values: [...]"
+  email_contacts      Same error
+  phone_call_clicks   Same error
+  text_message_clicks Same error
+
+--- Audience breakdowns not available as account-level metrics ---
+
+  audience_city       "metric[0] must be one of the following values: [...]"
+  audience_country    Same error
+  audience_gender_age Same error
+  audience_locale     Same error
+
+==================================================
+DETAILED ERROR MESSAGE CATEGORIES
+==================================================
+
+Error A: "metric[0] must be one of the following values: [list]"
+  The metric name is not in the allowed set for /ig-user-id/insights.
+  Affected: impressions, email_contacts, phone_call_clicks,
+  text_message_clicks, audience_city, audience_country,
+  audience_gender_age, audience_locale.
+  These are NOT AVAILABLE at this endpoint.
+
+Error B: "The following metrics (X) should be specified with
+          parameter metric_type=total_value"
+  The metric exists but requires metric_type=total_value to work.
+  Adding metric_type=total_value + period=day gives SUCCESS.
+  Affected: accounts_engaged, total_interactions, likes, comments,
+  saves, shares, replies, views, follows_and_unfollows,
+  profile_links_taps, profile_views, website_clicks.
+
+Error C: "The following periods (X) are incompatible with the
+          metric (Y)"
+  The metric exists but the given period grain is not supported
+  for it.
+  Examples: follower_count works with period=day but NOT
+  period=week/days_28/lifetime.
+  Interaction metrics work with period=day+total_value but NOT
+  period=days_28+total_value or period=lifetime+total_value.
+
+Error D: "The following metric (X) is incompatible with the
+          metric type (total_value)"
+  The metric exists but the total_value aggregation mode is not
+  supported for it.
+  Affected: follower_count (any period + metric_type=total_value).
+
+==================================================
+NOTES ON metric_type PARAMETER
+==================================================
+
+The test progression across 3 script versions:
+
+v1 (period only, no metric_type):
+  - reach, follower_count, online_followers returned data
+  - 12 metrics said "should be specified with parameter
+    metric_type=total_value"
+
+v2 (metric_type alone, no period):
+  - All said "The parameter period is required"
+  - metric_type=time_series said "incompatible with metric type"
+
+v3 (metric_type + period=days_28 or lifetime together):
+  - 12 metrics said "period incompatible"
+  - Only the original 3 metrics worked
+
+v4 (added period=day tests):
+  - period=day alone: still says "needs metric_type=total_value"
+  - period=day + metric_type=total_value: SUCCESS for all 12!
+  - days_28/lifetime + total_value: still fails for all 12
+
+Conclusion: The pattern for interaction/profile-type metrics at
+the IG account level is:
+  metric_type=total_value AND period=day  (both required)
+No other period grain works.
