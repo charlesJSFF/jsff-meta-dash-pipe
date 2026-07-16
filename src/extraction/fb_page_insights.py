@@ -1,9 +1,9 @@
 """
 Facebook Page Insights extraction.
 
-Pulls daily Page-level insights (reach, impressions, page_views_total,
-follower_count) from `/{page-id}/insights` for an explicit date range and
-flattens them into one row per day, with metrics as columns.
+Pulls daily Page-level insights (page_media_view, page_total_media_view_unique,
+page_views_total, page_follows) from `/{page-id}/insights` for an explicit
+date range and flattens them into one row per day, with metrics as columns.
 
 Row shape chosen: one row per day, metrics as columns (wide format), e.g.
 {"date": "2026-06-18", "reach": 123, "impressions": 456, ...}. This was
@@ -48,8 +48,8 @@ def _http_get_json(url: str) -> dict:
 
     NOTE: no retry/backoff is implemented here yet. This is where retry
     logic for transient error code 2 (and, if/when IG volume grows, code
-    80002) would eventually go -- see docs/relevant_api_reference.md secs
-    3.3/3.4/6. Out of scope for this piece.
+    80002) would eventually go -- see docs/meta_graph_api_reference.md
+    sec 7 (Known systemic gaps / gotchas). Out of scope for this piece.
     """
     try:
         with urllib.request.urlopen(url) as response:
@@ -81,8 +81,8 @@ def fetch_page_insights_raw(
     return the raw decoded JSON, with any paginated pages merged into a
     single {"data": [...]} dict.
 
-    Pagination follows `paging.next` (per docs/relevant_api_reference.md
-    sec 4) and uses `limit`, not `page_size`, since Meta silently ignores
+    Pagination follows `paging.next` (per docs/meta_graph_api_reference.md
+    sec 3) and uses `limit`, not `page_size`, since Meta silently ignores
     `page_size`.
     """
     params = {
@@ -119,7 +119,7 @@ def parse_insights_response(
 
     Known gap (not handled here): an empty/missing insights value for a
     given day is indistinguishable from a real zero for that day. See
-    docs/relevant_api_reference.md sec 3.1. Flagging only; not solved here.
+    docs/meta_graph_api_reference.md sec 7. Flagging only; not solved here.
     """
     rows_by_date: Dict[str, Dict[str, object]] = {}
 

@@ -109,9 +109,14 @@ Meta Dashboard Pipeline/
 ## Open Questions (as of July 2026 — resolve opportunistically)
 
 1. ~~What did `diagnose_token_190.py` actually find? No output was saved.~~
-   **Resolved.** The 4 calls confirmed that token (code 190) errors no longer
-   occur with the current SYSTEM_USER_TOKEN + Page Access Token exchange.
-   Saved output at `scripts/output/diagnose_token_190_output.txt`.
+   **Resolved (corrected 2026-07-16).** The 4 calls never exercise a
+   Page Access Token exchange — all 4 use `config.system_user_token`
+   directly (confirmed by reading the script). `code=190` never appears
+   in the output; the one failure (Call 3, `metric=page_views`) is
+   `code=100` "The value must be a valid insights metric" — an invalid
+   legacy metric name, not a token-type error. `code=190` has never been
+   reproduced anywhere in this repo's diagnostics, under either token
+   type. Saved output at `scripts/output/diagnose_token_190_output.txt`.
 2. ~~What did `diagnose_candidate_page_metrics.py` find for the 8 candidate
    metrics it tested? No output was saved.~~
    **Resolved.** All 8 candidate metrics succeeded on v25.0 — including the
@@ -119,9 +124,15 @@ Meta Dashboard Pipeline/
    Saved output at `scripts/output/diagnose_candidate_page_metrics_output.txt`.
 3. ~~Did the Page-token exchange actually change the outcome for `page_fans` in
    `diagnose_page_fans.py`? No output was saved.~~
-   **Resolved.** Yes — the Page Access Token resolved `page_fans`; the
-   raw SYSTEM_USER_TOKEN alone returned error code 190. Also surfaced
-   `page_views` → `page_views_total` as the API's canonical metric name.
+   **Resolved (corrected 2026-07-16).** No — the token exchange made no
+   observable difference. Both the raw SYSTEM_USER_TOKEN (Call 1) and the
+   exchanged Page Access Token (Call 3) return the identical `code=100`
+   "value must be a valid insights metric" error for `page_fans`; `code=190`
+   never appears. `page_fans` is invalid on v25.0 regardless of token type
+   (independently confirmed by the 80-metric sweep). Also surfaced
+   `page_views` → `page_views_total` as the API's likely canonical
+   successor name (inferred by elimination + description match, not a
+   confirmed 1:1 migration — see `docs/metric_reference_fb_page.md`).
    Saved output at `scripts/output/diagnose_page_fans_output.txt`.
 4. Has `run_fb_page_extraction.py` ever completed a successful end-to-end
    run? No CSV output or log currently exists in the repo.
