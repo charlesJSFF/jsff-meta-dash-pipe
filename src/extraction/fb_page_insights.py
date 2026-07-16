@@ -24,7 +24,7 @@ from typing import Dict, Iterable, List, Optional, Sequence, Union
 GRAPH_API_VERSION = "v25.0"
 GRAPH_API_BASE = f"https://graph.facebook.com/{GRAPH_API_VERSION}"
 
-DEFAULT_METRICS: Sequence[str] = ("reach", "impressions", "page_views_total", "follower_count")
+DEFAULT_METRICS: Sequence[str] = ("page_media_view", "page_total_media_view_unique", "page_views_total", "page_follows")
 
 DateLike = Union[str, date]
 

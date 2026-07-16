@@ -21,12 +21,27 @@ _Last updated: July 2026, following a full repo survey._
   - diagnose_token_190.py — what did the 4 calls actually find about error 190?
   - diagnose_candidate_page_metrics.py — which of the 8 candidate metrics passed?
   - diagnose_page_fans.py — did the token exchange change the outcome?
-- [ ] Confirm whether run_fb_page_extraction.py has ever completed a
-      successful end-to-end run. If not, run it once and keep the resulting
-      CSV (or a redacted log) as a baseline artifact.
+- [x] Confirmed: run_fb_page_extraction.py completed successfully with
+      corrected FB Page metric names. CSV output saved at
+      scripts/output/run_fb_page_extraction_output.csv.
 
 ## Phase 1 — Instagram Media Insights
 
+- [ ] **Open question: no confirmed cumulative follower-total metric on IG.**
+      `follower_count` was assumed to be a lifetime snapshot (matching FB's
+      `page_follows`), but a live query (June 18–July 1, 2026 window) showed
+      daily values fluctuating in the single-to-double digits (11, 6, 3, 8,
+      14, 24...) — inconsistent with a cumulative total for an established
+      Page. This is actually a daily net-change metric; Meta's API
+      description ("Total number of unique accounts following this
+      profile") is misleading. Correct FB pairing is
+      `page_daily_follows_unique` <-> `follower_count`, not `page_follows`.
+      No validated IG equivalent to `page_follows` (cumulative) currently
+      exists — week/days_28/lifetime periods all failed for this metric.
+      Decide before building IG extraction: (a) reconstruct a running
+      total from a baseline snapshot + summed deltas, or (b) accept IG
+      side shows growth-rate only, not absolute follower count, as an
+      intentional platform asymmetry.
 - [ ] Build an IG-equivalent of diagnose_all_page_metrics.py against
       /{ig-id}/media insights fields (reach, views, etc.), to establish
       which metrics are actually valid per media type — the FB approach

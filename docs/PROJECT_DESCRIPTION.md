@@ -67,8 +67,10 @@ Meta Dashboard Pipeline/
   — 37 of 80 Page-level metrics succeed on v25.0; 43 fail (mostly the
   deprecated `page_impressions_*` / `page_fans_*` / `page_posts_impressions_*`
   families, plus 4 monetization metrics requiring admin access). The
-   pipeline's actual metrics (`reach`, `impressions`, `page_views_total`,
-  `follower_count`) are not in the failing set.
+   pipeline's actual metrics (`page_media_view`, `page_total_media_view_unique`,
+  `page_views_total`, `page_follows`) are valid FB Page Insights metric names.
+  (These replaced earlier IG-derived names — `reach`, `impressions`,
+  `follower_count` — that caused HTTP 400 errors against the FB endpoint.)
 - **Instagram Media extraction:** not started. `IG_USER_ID` exists in config
   but has no corresponding extraction module yet. Metric availability was
   probed via `scripts/diagnose_all_ig_media_metrics.py` — **IMAGE**, **VIDEO**,

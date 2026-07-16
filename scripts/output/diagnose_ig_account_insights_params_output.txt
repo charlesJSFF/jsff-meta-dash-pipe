@@ -1,0 +1,1223 @@
+==============================================================================
+IG ACCOUNT-LEVEL INSIGHTS -- PARAMETER-SPACE & PAYLOAD PROBE
+Endpoint: GET /{ig-user-id}/insights (Graph API v25.0)
+Generated: 2026-07-16
+==============================================================================
+
+==============================================================================
+OPEN QUESTION: IS THERE A GENUINE CUMULATIVE FOLLOWER-TOTAL METRIC?
+==============================================================================
+
+CONFIRMED (this run, live):
+
+1. Live enumerated list of valid /{ig-user-id}/insights metric names,
+   obtained by forcing the API's own validation error (not inferred from
+   the candidate list diagnose_all_ig_account_metrics.py happened to try):
+
+   - reach
+   - follower_count
+   - website_clicks
+   - profile_views
+   - online_followers
+   - accounts_engaged
+   - total_interactions
+   - likes
+   - comments
+   - shares
+   - saves
+   - replies
+   - engaged_audience_demographics
+   - reached_audience_demographics
+   - follower_demographics
+   - follows_and_unfollows
+   - profile_links_taps
+   - views
+   - threads_likes
+   - threads_replies
+   - reposts
+   - quotes
+   - threads_followers
+   - threads_follower_demographics
+   - content_views
+   - threads_views
+   - threads_clicks
+   - threads_reposts
+
+   Raw API error message this was parsed from:
+   (#100) metric[0] must be one of the following values: reach, follower_count, website_clicks, profile_views, online_followers, accounts_engaged, total_interactions, likes, comments, shares, saves, replies, engaged_audience_demographics, reached_audience_demographics, follower_demographics, follows_and_unfollows, profile_links_taps, views, threads_likes, threads_replies, reposts, quotes, threads_followers, threads_follower_demographics, content_views, threads_views, threads_clicks, threads_reposts
+
+   None of the names in this list read as a cumulative/lifetime follower
+   total distinct from `follower_count` -- this is a direct observation of
+   the enumerated set, not an inference from partial testing.
+
+2. follower_count (period=day) fresh sample from this run, showing the
+   daily-delta shape directly (values fluctuate day to day, consistent with
+   the ROADMAP's prior finding, not a running total):
+
+   Window requested: 2026-07-09..2026-07-15
+   Response:
+   {
+     "data": [
+       {
+         "name": "follower_count",
+         "period": "day",
+         "values": [
+           {
+             "value": 6,
+             "end_time": "2026-07-09T07:00:00+0000"
+           },
+           {
+             "value": 13,
+             "end_time": "2026-07-10T07:00:00+0000"
+           },
+           {
+             "value": 6,
+             "end_time": "2026-07-11T07:00:00+0000"
+           },
+           {
+             "value": 9,
+             "end_time": "2026-07-12T07:00:00+0000"
+           },
+           {
+             "value": 7,
+             "end_time": "2026-07-13T07:00:00+0000"
+           },
+           {
+             "value": 2,
+             "end_time": "2026-07-14T07:00:00+0000"
+           }
+         ],
+         "title": "Follower Count",
+         "description": "Total number of unique accounts following this profile",
+         "id": "17841401980438718/insights/follower_count/day"
+       }
+     ],
+     "paging": {
+       "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=follower_count&period=day",
+       "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=follower_count&period=day"
+     }
+   }
+
+3. main sweep result for follower_count (below, DETAIL section) confirms
+   period=week/days_28/lifetime are all rejected for this metric -- no
+   period grain turns it into a running total.
+
+4. SUPPLEMENTARY, NOT AN INSIGHTS METRIC: GET /{ig-user-id}?fields=
+   followers_count,follows_count,media_count -- the IG User node's own
+   fields (different endpoint entirely; no period/since/until; always
+   returns the CURRENT live total, not a historical series):
+
+   {
+     "followers_count": 16184,
+     "follows_count": 1220,
+     "media_count": 1625,
+     "id": "17841401980438718"
+   }
+
+DIRECT ANSWER:
+   No account-level Insights metric produces a genuine cumulative/lifetime
+   follower total -- confirmed, not inferred, via the live enumerated valid-
+   metric-name list in (1) above, plus the period-rejection results for
+   follower_count in the DETAIL section below. The only mechanism this run
+   found that returns a true cumulative total is the IG User node's
+   `followers_count` FIELD (item 4 above) -- a live snapshot at query time,
+   not a historical/insights value, and not backed by any period or date
+   range. Whether/how to use that field (e.g. daily snapshotting to build a
+   history) is an extraction-design decision, explicitly NOT made here --
+   flagging it as the concrete option for a later session to evaluate.
+
+==============================================================================
+SUMMARY (plain English)
+==============================================================================
+
+Of 17 previously-confirmed-valid combos, 17 were re-tested this run.
+
+Safe for full YoY backfill (coverage-confirmed >= 365d, time-series shape only):
+  (none)
+
+Range-limited (coverage-confirmed, but shorter than 12 months):
+  - metric=reach, period=day [RANGE_LIMITED (coverage-confirmed to 30d)]
+  - metric=reach, period=week [RANGE_LIMITED (coverage-confirmed to 30d)]
+  - metric=reach, period=days_28 [RANGE_LIMITED (coverage-confirmed to 30d)]
+  - metric=follower_count, period=day [RANGE_LIMITED (coverage-confirmed to 30d)]
+
+Range accepted but coverage UNVERIFIABLE (total_value shape -- no per-day
+breakdown to confirm the response actually reflects the requested window):
+  - metric=accounts_engaged, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=total_interactions, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=likes, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=comments, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=saves, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=shares, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=replies, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=views, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=follows_and_unfollows, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=profile_links_taps, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=profile_views, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+  - metric=website_clicks, period=day, metric_type=total_value [RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))]
+
+Range accepted, but full-window coverage not confirmed within tolerance
+(time-series shape, bare+range both ACCEPTED -- see DETAIL for the raw
+earliest/latest dates actually returned; this is NOT a rejection, just a
+case the coverage-tolerance check couldn't call "full"):
+  - metric=online_followers, period=lifetime [RANGE_ACCEPTED_BUT_NO_COVERAGE_CONFIRMED]
+
+Snapshot-only (bare metric works, but since/until is rejected):
+  (none)
+
+Rejected outright on re-test (previously SUCCESS, but failed this run):
+  (none)
+
+==============================================================================
+DETAIL
+==============================================================================
+
+------------------------------------------------------------------------------
+COMBO: metric=reach, period=day
+CLASSIFICATION: RANGE_LIMITED (coverage-confirmed to 30d)
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: time_series
+    since/until ACCEPTED. max_confirmed_days: 30
+    - 7d (2026-07-09..2026-07-15): ACCEPTED, FULL COVERAGE [6 points, earliest=2026-07-09, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "reach",
+              "period": "day",
+              "values": [
+                {
+                  "value": 1253,
+                  "end_time": "2026-07-09T07:00:00+0000"
+                },
+                {
+                  "value": 1033,
+                  "end_time": "2026-07-10T07:00:00+0000"
+                },
+                "... (2 entries omitted) ...",
+                {
+                  "value": 1567,
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": 1312,
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Reach",
+              "description": "Total number of times the Business Account's media objects have been uniquely viewed",
+              "id": "17841401980438718/insights/reach/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=reach&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=reach&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED, FULL COVERAGE [29 points, earliest=2026-06-16, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "reach",
+              "period": "day",
+              "values": [
+                {
+                  "value": 1646,
+                  "end_time": "2026-06-16T07:00:00+0000"
+                },
+                {
+                  "value": 2006,
+                  "end_time": "2026-06-17T07:00:00+0000"
+                },
+                "... (25 entries omitted) ...",
+                {
+                  "value": 1567,
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": 1312,
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Reach",
+              "description": "Total number of times the Business Account's media objects have been uniquely viewed",
+              "id": "17841401980438718/insights/reach/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=reach&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=reach&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=reach, period=week
+CLASSIFICATION: RANGE_LIMITED (coverage-confirmed to 30d)
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: time_series
+    since/until ACCEPTED. max_confirmed_days: 30
+    - 7d (2026-07-09..2026-07-15): ACCEPTED, FULL COVERAGE [6 points, earliest=2026-07-09, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "reach",
+              "period": "week",
+              "values": [
+                {
+                  "value": 6354,
+                  "end_time": "2026-07-09T07:00:00+0000"
+                },
+                {
+                  "value": 6173,
+                  "end_time": "2026-07-10T07:00:00+0000"
+                },
+                "... (2 entries omitted) ...",
+                {
+                  "value": 6053,
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": 5211,
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Reach",
+              "description": "Total number of times the Business Account's media objects have been uniquely viewed",
+              "id": "17841401980438718/insights/reach/week"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=reach&period=week",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=reach&period=week"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED, FULL COVERAGE [29 points, earliest=2026-06-16, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "reach",
+              "period": "week",
+              "values": [
+                {
+                  "value": 6123,
+                  "end_time": "2026-06-16T07:00:00+0000"
+                },
+                {
+                  "value": 6397,
+                  "end_time": "2026-06-17T07:00:00+0000"
+                },
+                "... (25 entries omitted) ...",
+                {
+                  "value": 6053,
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": 5211,
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Reach",
+              "description": "Total number of times the Business Account's media objects have been uniquely viewed",
+              "id": "17841401980438718/insights/reach/week"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=reach&period=week",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=reach&period=week"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=reach, period=days_28
+CLASSIFICATION: RANGE_LIMITED (coverage-confirmed to 30d)
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: time_series
+    since/until ACCEPTED. max_confirmed_days: 30
+    - 7d (2026-07-09..2026-07-15): ACCEPTED, FULL COVERAGE [6 points, earliest=2026-07-09, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "reach",
+              "period": "days_28",
+              "values": [
+                {
+                  "value": 14897,
+                  "end_time": "2026-07-09T07:00:00+0000"
+                },
+                {
+                  "value": 14781,
+                  "end_time": "2026-07-10T07:00:00+0000"
+                },
+                "... (2 entries omitted) ...",
+                {
+                  "value": 14544,
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": 14555,
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Reach",
+              "description": "Total number of times the Business Account's media objects have been uniquely viewed",
+              "id": "17841401980438718/insights/reach/days_28"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=reach&period=days_28",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=reach&period=days_28"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED, FULL COVERAGE [29 points, earliest=2026-06-16, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "reach",
+              "period": "days_28",
+              "values": [
+                {
+                  "value": 20139,
+                  "end_time": "2026-06-16T07:00:00+0000"
+                },
+                {
+                  "value": 20031,
+                  "end_time": "2026-06-17T07:00:00+0000"
+                },
+                "... (25 entries omitted) ...",
+                {
+                  "value": 14544,
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": 14555,
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Reach",
+              "description": "Total number of times the Business Account's media objects have been uniquely viewed",
+              "id": "17841401980438718/insights/reach/days_28"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=reach&period=days_28",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=reach&period=days_28"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=follower_count, period=day
+CLASSIFICATION: RANGE_LIMITED (coverage-confirmed to 30d)
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: time_series
+    since/until ACCEPTED. max_confirmed_days: 30
+    - 7d (2026-07-09..2026-07-15): ACCEPTED, FULL COVERAGE [6 points, earliest=2026-07-09, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "follower_count",
+              "period": "day",
+              "values": [
+                {
+                  "value": 6,
+                  "end_time": "2026-07-09T07:00:00+0000"
+                },
+                {
+                  "value": 13,
+                  "end_time": "2026-07-10T07:00:00+0000"
+                },
+                "... (2 entries omitted) ...",
+                {
+                  "value": 7,
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": 2,
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Follower Count",
+              "description": "Total number of unique accounts following this profile",
+              "id": "17841401980438718/insights/follower_count/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=follower_count&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=follower_count&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED, FULL COVERAGE [29 points, earliest=2026-06-16, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "follower_count",
+              "period": "day",
+              "values": [
+                {
+                  "value": 8,
+                  "end_time": "2026-06-16T07:00:00+0000"
+                },
+                {
+                  "value": 13,
+                  "end_time": "2026-06-17T07:00:00+0000"
+                },
+                "... (25 entries omitted) ...",
+                {
+                  "value": 7,
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": 2,
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Follower Count",
+              "description": "Total number of unique accounts following this profile",
+              "id": "17841401980438718/insights/follower_count/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=follower_count&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=follower_count&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=online_followers, period=lifetime
+CLASSIFICATION: RANGE_ACCEPTED_BUT_NO_COVERAGE_CONFIRMED
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: time_series
+    since/until ACCEPTED. max_confirmed_days: 0
+    - 7d (2026-07-09..2026-07-15): ACCEPTED, TRUNCATED [6 points, earliest=2026-07-09, latest=2026-07-14, front_gap=0d, back_gap=1d]
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "online_followers",
+              "period": "lifetime",
+              "values": [
+                {
+                  "value": {
+                    "0": 1107,
+                    "1": 1151,
+                    "2": 1566,
+                    "3": 2317,
+                    "4": 3062,
+                    "5": 3619,
+                    "6": 3849,
+                    "7": 3859,
+                    "8": 3864,
+                    "9": 4006,
+                    "10": 3998,
+                    "11": 3975,
+                    "12": 4182,
+                    "13": 4255,
+                    "14": 4242,
+                    "15": 4112,
+                    "16": 4026,
+                    "17": 4101,
+                    "18": 4080,
+                    "19": 3703,
+                    "20": 3147,
+                    "21": 2462,
+                    "22": 1750,
+                    "23": 1351
+                  },
+                  "end_time": "2026-07-09T07:00:00+0000"
+                },
+                {
+                  "value": {
+                    "0": 1154,
+                    "1": 1192,
+                    "2": 1571,
+                    "3": 2291,
+                    "4": 3020,
+                    "5": 3509,
+                    "6": 3842,
+                    "7": 3793,
+                    "8": 3819,
+                    "9": 3892,
+                    "10": 3864,
+                    "11": 3968,
+                    "12": 4100,
+                    "13": 4132,
+                    "14": 4132,
+                    "15": 3903,
+                    "16": 3908,
+                    "17": 3948,
+                    "18": 3972,
+                    "19": 3742,
+                    "20": 3244,
+                    "21": 2540,
+                    "22": 1811,
+                    "23": 1403
+                  },
+                  "end_time": "2026-07-10T07:00:00+0000"
+                },
+                "... (2 entries omitted) ...",
+                {
+                  "value": {
+                    "0": 1118,
+                    "1": 1161,
+                    "2": 1515,
+                    "3": 2307,
+                    "4": 3096,
+                    "5": 3558,
+                    "6": 3843,
+                    "7": 3944,
+                    "8": 4077,
+                    "9": 4095,
+                    "10": 4051,
+                    "11": 4177,
+                    "12": 4214,
+                    "13": 4239,
+                    "14": 4168,
+                    "15": 4215,
+                    "16": 4121,
+                    "17": 4233,
+                    "18": 4210,
+                    "19": 3830,
+                    "20": 3192,
+                    "21": 2426,
+                    "22": 1664,
+                    "23": 1308
+                  },
+                  "end_time": "2026-07-13T07:00:00+0000"
+                },
+                {
+                  "value": {
+                    "0": 1158,
+                    "1": 1151,
+                    "2": 1575,
+                    "3": 2433,
+                    "4": 3095,
+                    "5": 3611,
+                    "6": 3840,
+                    "7": 3889,
+                    "8": 3971,
+                    "9": 4062,
+                    "10": 3960,
+                    "11": 4166,
+                    "12": 4159,
+                    "13": 4204,
+                    "14": 4302,
+                    "15": 4218,
+                    "16": 4087,
+                    "17": 4110,
+                    "18": 4314,
+                    "19": 3871,
+                    "20": 3255,
+                    "21": 2396,
+                    "22": 1711,
+                    "23": 1294
+                  },
+                  "end_time": "2026-07-14T07:00:00+0000"
+                }
+              ],
+              "title": "Online Followers",
+              "description": "Total number of this profile's followers that were online during the specified period",
+              "id": "17841401980438718/insights/online_followers/lifetime"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=online_followers&period=lifetime",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=online_followers&period=lifetime"
+          }
+        }
+
+------------------------------------------------------------------------------
+COMBO: metric=accounts_engaged, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "accounts_engaged",
+              "period": "day",
+              "title": "Accounts engaged",
+              "description": "The number of accounts that have interacted with your content, including in ads. Content includes posts, stories, reels, videos and live videos. Interactions can include actions such as likes, saves, comments, shares or replies. These metrics are estimated and in development.",
+              "total_value": {
+                "value": 293
+              },
+              "id": "17841401980438718/insights/accounts_engaged/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=accounts_engaged&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=accounts_engaged&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "accounts_engaged",
+              "period": "day",
+              "title": "Accounts engaged",
+              "description": "The number of accounts that have interacted with your content, including in ads. Content includes posts, stories, reels, videos and live videos. Interactions can include actions such as likes, saves, comments, shares or replies. These metrics are estimated and in development.",
+              "total_value": {
+                "value": 2411
+              },
+              "id": "17841401980438718/insights/accounts_engaged/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=accounts_engaged&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=accounts_engaged&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=total_interactions, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "total_interactions",
+              "period": "day",
+              "title": "Content interactions",
+              "description": "The total number of post interactions, story interactions, reels interactions, video interactions and live video interactions, including any interactions on boosted content.",
+              "total_value": {
+                "value": 408
+              },
+              "id": "17841401980438718/insights/total_interactions/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=total_interactions&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=total_interactions&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "total_interactions",
+              "period": "day",
+              "title": "Content interactions",
+              "description": "The total number of post interactions, story interactions, reels interactions, video interactions and live video interactions, including any interactions on boosted content.",
+              "total_value": {
+                "value": 4123
+              },
+              "id": "17841401980438718/insights/total_interactions/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=total_interactions&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=total_interactions&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=likes, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "likes",
+              "period": "day",
+              "title": "Likes",
+              "description": "The number of likes on your posts, reels and videos.",
+              "total_value": {
+                "value": 304
+              },
+              "id": "17841401980438718/insights/likes/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=likes&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=likes&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "likes",
+              "period": "day",
+              "title": "Likes",
+              "description": "The number of likes on your posts, reels and videos.",
+              "total_value": {
+                "value": 3068
+              },
+              "id": "17841401980438718/insights/likes/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=likes&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=likes&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=comments, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "comments",
+              "period": "day",
+              "title": "Comments",
+              "description": "The number of comments on your posts, reels, videos, and live videos.",
+              "total_value": {
+                "value": 7
+              },
+              "id": "17841401980438718/insights/comments/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=comments&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=comments&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "comments",
+              "period": "day",
+              "title": "Comments",
+              "description": "The number of comments on your posts, reels, videos, and live videos.",
+              "total_value": {
+                "value": 112
+              },
+              "id": "17841401980438718/insights/comments/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=comments&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=comments&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=saves, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "saves",
+              "period": "day",
+              "title": "Saves",
+              "description": "The number of saves of your posts, reels and videos.",
+              "total_value": {
+                "value": 54
+              },
+              "id": "17841401980438718/insights/saves/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=saves&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=saves&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "saves",
+              "period": "day",
+              "title": "Saves",
+              "description": "The number of saves of your posts, reels and videos.",
+              "total_value": {
+                "value": 521
+              },
+              "id": "17841401980438718/insights/saves/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=saves&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=saves&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=shares, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "shares",
+              "period": "day",
+              "title": "Shares",
+              "description": "The number of shares of your posts, stories, reels, videos and live videos.",
+              "total_value": {
+                "value": 21
+              },
+              "id": "17841401980438718/insights/shares/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=shares&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=shares&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "shares",
+              "period": "day",
+              "title": "Shares",
+              "description": "The number of shares of your posts, stories, reels, videos and live videos.",
+              "total_value": {
+                "value": 196
+              },
+              "id": "17841401980438718/insights/shares/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=shares&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=shares&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=replies, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "replies",
+              "period": "day",
+              "title": "Replies",
+              "description": "The number of replies you received from your story, including text replies and quick reaction replies.",
+              "total_value": {
+                "value": 0
+              },
+              "id": "17841401980438718/insights/replies/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=replies&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=replies&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "replies",
+              "period": "day",
+              "title": "Replies",
+              "description": "The number of replies you received from your story, including text replies and quick reaction replies.",
+              "total_value": {
+                "value": 4
+              },
+              "id": "17841401980438718/insights/replies/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=replies&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=replies&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=views, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "views",
+              "period": "day",
+              "title": "Views",
+              "description": "The number of times your content was played or displayed. Content includes reels, posts, stories.",
+              "total_value": {
+                "value": 17651
+              },
+              "id": "17841401980438718/insights/views/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=views&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=views&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "views",
+              "period": "day",
+              "title": "Views",
+              "description": "The number of times your content was played or displayed. Content includes reels, posts, stories.",
+              "total_value": {
+                "value": 120156
+              },
+              "id": "17841401980438718/insights/views/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=views&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=views&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=follows_and_unfollows, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: unknown
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "follows_and_unfollows",
+              "period": "day",
+              "title": "Follows and unfollows",
+              "description": "The number of accounts that followed you and the number of accounts that unfollowed you or left Instagram in the selected time period.",
+              "id": "17841401980438718/insights/follows_and_unfollows/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=follows_and_unfollows&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=follows_and_unfollows&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "follows_and_unfollows",
+              "period": "day",
+              "title": "Follows and unfollows",
+              "description": "The number of accounts that followed you and the number of accounts that unfollowed you or left Instagram in the selected time period.",
+              "id": "17841401980438718/insights/follows_and_unfollows/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=follows_and_unfollows&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=follows_and_unfollows&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=profile_links_taps, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "profile_links_taps",
+              "period": "day",
+              "title": "Profile links taps",
+              "description": "The number of taps on your business address, call button, email button and text button.",
+              "total_value": {
+                "value": 0
+              },
+              "id": "17841401980438718/insights/profile_links_taps/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=profile_links_taps&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=profile_links_taps&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "profile_links_taps",
+              "period": "day",
+              "title": "Profile links taps",
+              "description": "The number of taps on your business address, call button, email button and text button.",
+              "total_value": {
+                "value": 1
+              },
+              "id": "17841401980438718/insights/profile_links_taps/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=profile_links_taps&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=profile_links_taps&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=profile_views, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "profile_views",
+              "period": "day",
+              "title": "Profile visits",
+              "description": "The number of times your profile was visited.",
+              "total_value": {
+                "value": 96
+              },
+              "id": "17841401980438718/insights/profile_views/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=profile_views&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=profile_views&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "profile_views",
+              "period": "day",
+              "title": "Profile visits",
+              "description": "The number of times your profile was visited.",
+              "total_value": {
+                "value": 552
+              },
+              "id": "17841401980438718/insights/profile_views/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=profile_views&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=profile_views&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.
+
+------------------------------------------------------------------------------
+COMBO: metric=website_clicks, period=day, metric_type=total_value
+CLASSIFICATION: RANGE_ACCEPTED_BUT_UNVERIFIABLE (unverifiable (7d+ accepted, no per-day breakdown to confirm coverage))
+------------------------------------------------------------------------------
+  bare ACCEPTED
+  response_shape: total_value
+    since/until ACCEPTED. max_confirmed_days: unverifiable (7d+ accepted, no per-day breakdown to confirm coverage)
+    - 7d (2026-07-09..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "website_clicks",
+              "period": "day",
+              "title": "Website link taps",
+              "description": "The number of times the link to your website was tapped.",
+              "total_value": {
+                "value": 5
+              },
+              "id": "17841401980438718/insights/website_clicks/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1783036799&until=1783555199&metric=website_clicks&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1784592001&metric=website_clicks&metric_type=total_value&period=day"
+          }
+        }
+    - 30d (2026-06-16..2026-07-15): ACCEPTED (total_value shape -- no per-day breakdown, coverage NOT independently verified)
+      sample payload:
+        {
+          "data": [
+            {
+              "name": "website_clicks",
+              "period": "day",
+              "title": "Website link taps",
+              "description": "The number of times the link to your website was tapped.",
+              "total_value": {
+                "value": 68
+              },
+              "id": "17841401980438718/insights/website_clicks/day"
+            }
+          ],
+          "paging": {
+            "previous": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1779062399&until=1781567999&metric=website_clicks&metric_type=total_value&period=day",
+            "next": "https://graph.facebook.com/v25.0/17841401980438718/insights?access_token=***REDACTED***&since=1784073601&until=1786579201&metric=website_clicks&metric_type=total_value&period=day"
+          }
+        }
+    - 90d (2026-04-17..2026-07-15): REJECTED -- code=100 subcode=None msg=(#100) There cannot be more than 30 days (2592000 s) between since and until.

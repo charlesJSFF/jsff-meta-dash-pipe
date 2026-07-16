@@ -1,0 +1,171 @@
+=== IG Media Insights -- REELS/STORY gap-closing diagnostic ===
+Endpoint under test: GET /{ig-media-id}/insights (Graph API v25.0)
+Candidate metrics (same 10 used for IMAGE/VIDEO/CAROUSEL_ALBUM): reach, saved, likes, comments, shares, total_interactions, engagement, impressions, video_views, views
+
+--- REELS discovery: GET /{ig-user-id}/media, fields=id,media_type,media_product_type,timestamp, limit=50 ---
+  Fetched 50 recent media item(s).
+  media_product_type breakdown: {'FEED': 35, 'REELS': 15}
+  FOUND 15 REELS item(s). Using most recent: id=17874602505612323 media_type=VIDEO timestamp=2026-06-01T21:02:09+0000
+--- Testing REELS (media ID 17874602505612323) against the 10 candidate metrics ---
+  reach: SUCCESS
+  saved: SUCCESS
+  likes: SUCCESS
+  comments: SUCCESS
+  shares: SUCCESS
+  total_interactions: SUCCESS
+  engagement: FAIL code=100 subcode=None msg=(#100) metric[0] must be one of the following values: impressions, reach, replies, saved, likes, comments, shares, total_interactions, follows, profile_visits, profile_activity, navigation, ig_reels_video_view_total_time, ig_reels_avg_watch_time, views, reels_skip_rate, reposts, facebook_views, crossposted_views, total_views, total_likes, total_comments, link_clicks
+  impressions: FAIL code=100 subcode=None msg=(#100) The Media Insights API does not support the impressions metric for this media product type.
+  video_views: FAIL code=100 subcode=None msg=(#100) metric[0] must be one of the following values: impressions, reach, replies, saved, likes, comments, shares, total_interactions, follows, profile_visits, profile_activity, navigation, ig_reels_video_view_total_time, ig_reels_avg_watch_time, views, reels_skip_rate, reposts, facebook_views, crossposted_views, total_views, total_likes, total_comments, link_clicks
+  views: SUCCESS
+
+--- STORY discovery, attempt 1: media_product_type=='STORY' within /{ig-user-id}/media ---
+  No media_product_type == 'STORY' items found on the /media edge (of the 50 most recent items).
+--- STORY discovery, attempt 2: GET /{ig-user-id}/stories (active-only edge) ---
+  /stories edge returned 0 active item(s).
+  No active Stories found on the dedicated /stories edge.
+*** STORY: BLOCKED -- no live/active Story content found via either the /media edge (filtered for media_product_type=='STORY') or the dedicated /{ig-user-id}/stories edge. Stories expire ~24h after posting, so this is consistent with (but not conclusive proof of) 'no Story was posted in the last 24h at run time' -- re-run this script within 24h of posting a Story to get a real test. Not guessed/skipped silently. ***
+
+==============================================================================
+SUMMARY
+==============================================================================
+
+REELS: 7 succeeded, 3 failed (of 10)
+  Succeeded: reach, saved, likes, comments, shares, total_interactions, views
+  Failed: engagement, impressions, video_views
+
+STORY: BLOCKED -- no live/active Story content found via either the /media edge (filtered for media_product_type=='STORY') or the dedicated /{ig-user-id}/stories edge. Stories expire ~24h after posting, so this is consistent with (but not conclusive proof of) 'no Story was posted in the last 24h at run time' -- re-run this script within 24h of posting a Story to get a real test. Not guessed/skipped silently.
+
+==============================================================================
+SAMPLE PAYLOADS (one per working metric, redacted, values array truncated to 3 entries)
+==============================================================================
+
+--- REELS / reach ---
+{
+  "data": [
+    {
+      "name": "reach",
+      "period": "lifetime",
+      "values": [
+        {
+          "value": 4569
+        }
+      ],
+      "title": "Accounts reached",
+      "description": "The number of unique accounts that have seen this reel, at least once. Reach is different from impressions, which may include multiple views of your reel by the same accounts. This metric is estimated.",
+      "id": "17874602505612323/insights/reach/lifetime"
+    }
+  ]
+}
+
+--- REELS / saved ---
+{
+  "data": [
+    {
+      "name": "saved",
+      "period": "lifetime",
+      "values": [
+        {
+          "value": 6
+        }
+      ],
+      "title": "Saved",
+      "description": "The number of saves of your reel.",
+      "id": "17874602505612323/insights/saved/lifetime"
+    }
+  ]
+}
+
+--- REELS / likes ---
+{
+  "data": [
+    {
+      "name": "likes",
+      "period": "lifetime",
+      "values": [
+        {
+          "value": 109
+        }
+      ],
+      "title": "Likes",
+      "description": "The number of likes on your reel.",
+      "id": "17874602505612323/insights/likes/lifetime"
+    }
+  ]
+}
+
+--- REELS / comments ---
+{
+  "data": [
+    {
+      "name": "comments",
+      "period": "lifetime",
+      "values": [
+        {
+          "value": 4
+        }
+      ],
+      "title": "Comments",
+      "description": "The number of comments on your reel.",
+      "id": "17874602505612323/insights/comments/lifetime"
+    }
+  ]
+}
+
+--- REELS / shares ---
+{
+  "data": [
+    {
+      "name": "shares",
+      "period": "lifetime",
+      "values": [
+        {
+          "value": 3
+        }
+      ],
+      "title": "Shares",
+      "description": "The number of shares of your reel.",
+      "id": "17874602505612323/insights/shares/lifetime"
+    }
+  ]
+}
+
+--- REELS / total_interactions ---
+{
+  "data": [
+    {
+      "name": "total_interactions",
+      "period": "lifetime",
+      "values": [
+        {
+          "value": 123
+        }
+      ],
+      "title": "Reels interactions",
+      "description": "The number of likes, saves, comments and shares on your reels minus the number of unlikes, unsaves and deleted comments.",
+      "id": "17874602505612323/insights/total_interactions/lifetime"
+    }
+  ]
+}
+
+--- REELS / views ---
+{
+  "data": [
+    {
+      "name": "views",
+      "period": "lifetime",
+      "values": [
+        {
+          "value": 6476
+        }
+      ],
+      "title": "Views",
+      "description": "The number of times your reels was played or displayed.",
+      "id": "17874602505612323/insights/views/lifetime"
+    }
+  ]
+}
+
+==============================================================================
+NOTE ON diagnose_all_ig_media_metrics.py's PRIOR 'REELS: not found' RESULT
+==============================================================================
+diagnose_all_ig_media_metrics.py's discovery phase buckets media by the `media_type` field, which per the Graph API only ever returns IMAGE, VIDEO, or CAROUSEL_ALBUM -- Reels report media_type=VIDEO and are only distinguishable via the separate `media_product_type` field, which that script never queried. This means its prior 'REELS: not found' conclusion was not a reliable test of Reels' existence -- it could never have matched REELS regardless of whether Reels content existed. This script queries media_product_type directly instead. (This is a factual observation about the two scripts' queries, not a fix applied to the original file, which was left unmodified per the task brief.)

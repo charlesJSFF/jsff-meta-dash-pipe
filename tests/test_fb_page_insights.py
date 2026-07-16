@@ -8,6 +8,7 @@ sys.path.insert(
 )
 
 from fb_page_insights import (  # noqa: E402
+    DEFAULT_METRICS,
     extract_page_insights,
     fetch_page_insights_raw,
     parse_insights_response,
@@ -16,7 +17,7 @@ from fb_page_insights import (  # noqa: E402
 REALISTIC_RESPONSE = {
     "data": [
         {
-            "name": "reach",
+            "name": "page_media_view",
             "period": "day",
             "values": [
                 {"value": 100, "end_time": "2026-06-18T07:00:00+0000"},
@@ -24,7 +25,7 @@ REALISTIC_RESPONSE = {
             ],
         },
         {
-            "name": "impressions",
+            "name": "page_total_media_view_unique",
             "period": "day",
             "values": [
                 {"value": 200, "end_time": "2026-06-18T07:00:00+0000"},
@@ -40,7 +41,7 @@ REALISTIC_RESPONSE = {
             ],
         },
         {
-            "name": "follower_count",
+            "name": "page_follows",
             "period": "day",
             "values": [
                 {"value": 1000, "end_time": "2026-06-18T07:00:00+0000"},
@@ -58,24 +59,24 @@ def test_parses_realistic_response_into_expected_rows():
     assert rows == [
         {
             "date": "2026-06-18",
-            "reach": 100,
-            "impressions": 200,
+            "page_media_view": 100,
+            "page_total_media_view_unique": 200,
             "page_views_total": 5,
-            "follower_count": 1000,
+            "page_follows": 1000,
         },
         {
             "date": "2026-06-19",
-            "reach": 110,
-            "impressions": 210,
+            "page_media_view": 110,
+            "page_total_media_view_unique": 210,
             "page_views_total": 7,
-            "follower_count": 1001,
+            "page_follows": 1001,
         },
     ]
 
 
 def test_handles_response_missing_one_metric_without_crashing():
     response_missing_follower_count = {
-        "data": [m for m in REALISTIC_RESPONSE["data"] if m["name"] != "follower_count"],
+        "data": [m for m in REALISTIC_RESPONSE["data"] if m["name"] != "page_follows"],
         "paging": {},
     }
 
@@ -83,9 +84,9 @@ def test_handles_response_missing_one_metric_without_crashing():
 
     assert len(rows) == 2
     for row in rows:
-        assert "follower_count" not in row
-        assert row["reach"] is not None
-        assert row["impressions"] is not None
+        assert "page_follows" not in row
+        assert row["page_media_view"] is not None
+        assert row["page_total_media_view_unique"] is not None
         assert row["page_views_total"] is not None
 
 
@@ -104,7 +105,7 @@ def test_fetch_passes_correct_date_range_and_params(monkeypatch):
         since="2026-06-12",
         until="2026-06-18",
         period="day",
-        metrics=("reach", "impressions", "page_views_total", "follower_count"),
+        metrics=DEFAULT_METRICS,
         limit=100,
     )
 
@@ -115,7 +116,7 @@ def test_fetch_passes_correct_date_range_and_params(monkeypatch):
     assert "until=2026-06-18" in url
     assert "period=day" in url
     assert "limit=100" in url
-    assert "metric=reach%2Cimpressions%2Cpage_views_total%2Cfollower_count" in url
+    assert "metric=page_media_view%2Cpage_total_media_view_unique%2Cpage_views_total%2Cpage_follows" in url
 
 
 def test_extract_page_insights_combines_fetch_and_parse(monkeypatch):

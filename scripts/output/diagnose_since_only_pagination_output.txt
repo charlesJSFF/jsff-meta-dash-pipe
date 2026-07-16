@@ -1,0 +1,183 @@
+==============================================================================
+SINCE-ONLY QUERY BEHAVIOR (since present, until omitted)
+==============================================================================
+
+Requested since anchor for all since-only calls: 2023-07-17 (~3 years back)
+
+------------------------------------------------------------------------------
+metric=page_media_view period=day
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_media_view&period=day&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_media_view&period=day&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_media_view period=week
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_media_view&period=week&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_media_view&period=week&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_media_view period=days_28
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_media_view&period=days_28&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_media_view&period=days_28&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_media_view period=lifetime
+------------------------------------------------------------------------------
+  single-call coverage: 0 points, earliest=None, latest=None, span=Noned
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_media_view&period=lifetime&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_media_view&period=lifetime&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_video_views period=day
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_video_views&period=day&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_video_views&period=day&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_video_views period=week
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_video_views&period=week&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_video_views&period=week&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_video_views period=days_28
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_video_views&period=days_28&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_video_views&period=days_28&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_video_views period=lifetime
+------------------------------------------------------------------------------
+  single-call coverage: 0 points, earliest=None, latest=None, span=Noned
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_video_views&period=lifetime&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_video_views&period=lifetime&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_post_engagements period=day
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_post_engagements&period=day&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_post_engagements&period=day&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_post_engagements period=week
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_post_engagements&period=week&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_post_engagements&period=week&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_post_engagements period=days_28
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_post_engagements&period=days_28&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_post_engagements&period=days_28&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_post_engagements period=lifetime
+------------------------------------------------------------------------------
+  single-call coverage: 0 points, earliest=None, latest=None, span=Noned
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_post_engagements&period=lifetime&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_post_engagements&period=lifetime&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_views_total period=day
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_views_total&period=day&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_views_total&period=day&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_views_total period=week
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_views_total&period=week&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_views_total&period=week&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_views_total period=days_28
+------------------------------------------------------------------------------
+  single-call coverage: 1094 points, earliest=2023-07-18, latest=2026-07-15, span=1093d
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_views_total&period=days_28&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_views_total&period=days_28&until=1878620400
+
+------------------------------------------------------------------------------
+metric=page_views_total period=lifetime
+------------------------------------------------------------------------------
+  single-call coverage: 0 points, earliest=None, latest=None, span=Noned
+  paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+  paging.next:     since=2026-07-15 until=2029-07-13 (delta=1094.0d)
+  paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_views_total&period=lifetime&until=1689577200
+  paging.next URL (redacted):     https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1784098800&metric=page_views_total&period=lifetime&until=1878620400
+
+==============================================================================
+AUTO-PAGE WINDOW SIZE -- CONSISTENCY CHECK (at a fixed since anchor)
+==============================================================================
+
+IMPORTANT CAVEAT: every combo above was tested with the SAME since anchor (2023-07-17). A single shared delta across all of them is consistent with EITHER (a) a fixed auto-page window size, OR (b) since-only simply returning everything from `since` through 'now', with no fixed window at all -- since both explanations predict identical results when since is held constant. See the CONTROL TEST section below, which varies `since` to distinguish these two explanations. Do not read the word CONFIRMED below as ruling out (b).
+
+Distinct deltas (days) observed across all tested combos at this fixed since anchor: [1094.0]
+CONFIRMED (at this fixed since anchor only): all tested metric/period combos with a numeric paging cursor show the same ~1094.0d delta.
+
+Baseline for comparison (from the manual Explorer check that motivated this session): ~560 days observed for page_media_view / period=day.
+
+==============================================================================
+CONTROL TEST -- does the window scale with the requested `since`, or is it fixed?
+==============================================================================
+
+page_media_view/day, since=2025-01-02 (~560 days back): returned span=558d (earliest=2025-01-03, latest=2026-07-15)
+page_media_view/day, since=2023-07-17 (~3 years back): returned span=1093d (earliest=2023-07-18, latest=2026-07-15)
+
+FINDING: the ~560-day since anchor returned a span of 558d, matching since-to-now (559d) rather than the ~1094.0d delta seen with the 3-year anchor. This supports explanation (b): since-only queries return everything from `since` through 'now', not a fixed-size auto-page window. The manually-observed ~560-day figure was very likely just a function of the `since` date used in that manual check, not a fixed API page size.
+
+==============================================================================
+BACKWARD WALK -- TRUE HISTORICAL DEPTH
+==============================================================================
+
+metric=page_media_view period=day
+stop_reason=rejected
+
+  step 0: 1094 points, earliest=2023-07-18, latest=2026-07-15
+    paging.previous: since=2020-07-18 until=2023-07-17 (delta=1094.0d)
+    paging.previous URL (redacted): https://graph.facebook.com/v25.0/145245558842140/insights?access_token=***REDACTED***&since=1595055600&metric=page_media_view&period=day&until=1689577200
+  step 1: rejected -- code=100 subcode=1504016 msg=Invalid parameter
+
+FINDING: the walk was rejected past 2023-07-18 with code=100 subcode=1504016 -- the SAME error signature already established (in diagnose_page_metric_params.py's output) for since+until ranges wider than ~90 days. The rejected cursor itself requested a 1094.0d wide since+until range (2020-07-18..2023-07-17), reconstructed verbatim from the API's own paging.previous URL. CAVEAT -- this rejection does NOT confirm data stops existing before 2023-07-18; it more likely just means the API's own auto-generated paging.previous cursor is itself subject to the same range-width cap as a manually-constructed since+until query, making naive cursor-following an unreliable way to probe historical depth beyond the first hop. True historical depth beyond 2023-07-18 remains UNKNOWN from this walk -- confirmed only: since-only queries return real data back to at least 2023-07-18 in a single call (see the since-only results above).

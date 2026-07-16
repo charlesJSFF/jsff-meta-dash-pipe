@@ -1,0 +1,140 @@
+{
+  "data": [
+    {
+      "name": "page_media_view",
+      "period": "day",
+      "values": [
+        {
+          "value": 13122,
+          "end_time": "2026-07-08T07:00:00+0000"
+        },
+        {
+          "value": 11521,
+          "end_time": "2026-07-09T07:00:00+0000"
+        },
+        {
+          "value": 11019,
+          "end_time": "2026-07-10T07:00:00+0000"
+        },
+        {
+          "value": 11191,
+          "end_time": "2026-07-11T07:00:00+0000"
+        },
+        {
+          "value": 11754,
+          "end_time": "2026-07-12T07:00:00+0000"
+        },
+        {
+          "value": 13109,
+          "end_time": "2026-07-13T07:00:00+0000"
+        }
+      ],
+      "title": "Facebook views",
+      "description": "The number of times any content from your Page was displayed on a person's screen, including posts, stories, ads, and other content on your Page.",
+      "id": "145245558842140/insights/page_media_view/day"
+    },
+    {
+      "name": "page_total_media_view_unique",
+      "period": "day",
+      "values": [
+        {
+          "value": 6206,
+          "end_time": "2026-07-08T07:00:00+0000"
+        },
+        {
+          "value": 5268,
+          "end_time": "2026-07-09T07:00:00+0000"
+        },
+        {
+          "value": 5062,
+          "end_time": "2026-07-10T07:00:00+0000"
+        },
+        {
+          "value": 5217,
+          "end_time": "2026-07-11T07:00:00+0000"
+        },
+        {
+          "value": 5242,
+          "end_time": "2026-07-12T07:00:00+0000"
+        },
+        {
+          "value": 5788,
+          "end_time": "2026-07-13T07:00:00+0000"
+        }
+      ],
+      "title": null,
+      "description": "The number of total unique media viewers for FB page",
+      "id": "145245558842140/insights/page_total_media_view_unique/day"
+    },
+    {
+      "name": "page_views_total",
+      "period": "day",
+      "values": [
+        {
+          "value": 78,
+          "end_time": "2026-07-08T07:00:00+0000"
+        },
+        {
+          "value": 61,
+          "end_time": "2026-07-09T07:00:00+0000"
+        },
+        {
+          "value": 72,
+          "end_time": "2026-07-10T07:00:00+0000"
+        },
+        {
+          "value": 51,
+          "end_time": "2026-07-11T07:00:00+0000"
+        },
+        {
+          "value": 59,
+          "end_time": "2026-07-12T07:00:00+0000"
+        },
+        {
+          "value": 74,
+          "end_time": "2026-07-13T07:00:00+0000"
+        }
+      ],
+      "title": "Daily Total views count per Page",
+      "description": "Daily: Total views count per Page",
+      "id": "145245558842140/insights/page_views_total/day"
+    },
+    {
+      "name": "page_follows",
+      "period": "day",
+      "values": [
+        {
+          "value": 13736,
+          "end_time": "2026-07-08T07:00:00+0000"
+        },
+        {
+          "value": 13741,
+          "end_time": "2026-07-09T07:00:00+0000"
+        },
+        {
+          "value": 13748,
+          "end_time": "2026-07-10T07:00:00+0000"
+        },
+        {
+          "value": 13751,
+          "end_time": "2026-07-11T07:00:00+0000"
+        },
+        {
+          "value": 13754,
+          "end_time": "2026-07-12T07:00:00+0000"
+        },
+        {
+          "value": 13764,
+          "end_time": "2026-07-13T07:00:00+0000"
+        }
+      ],
+      "title": "Lifetime Total Follows",
+      "description": "Lifetime: The number of followers of your Facebook Page or profile. This is calculated as the number of follows minus the number of unfollows over the lifetime of your Facebook Page or profile. ",
+      "id": "145245558842140/insights/page_follows/day"
+    }
+  ],
+  "paging": {
+    "previous": "https://graph.facebook.com/v25.0/145245558842140/insights?access_token=%3CREDACTED%3E&since=1782889200&until=1783407600&metric=page_media_view%2Cpage_total_media_view_unique%2Cpage_views_total%2Cpage_follows&period=day",
+    "next": "https://graph.facebook.com/v25.0/145245558842140/insights?access_token=%3CREDACTED%3E&since=1783926000&until=1784444400&metric=page_media_view%2Cpage_total_media_view_unique%2Cpage_views_total%2Cpage_follows&period=day"
+  }
+}

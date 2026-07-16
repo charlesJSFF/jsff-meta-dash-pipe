@@ -1,0 +1,4 @@
+﻿Page CTA Clicks</h3>
+<div class="_57-c"><table class="_4-ss _5k9x"><thead><tr><th> Metric Name </th><th> Description </th><th> Values for `period` </th></tr></thead><tbody><tr><td class="_6n7a"><code>page_total_actions</code></td><td><div><p>The number of clicks on your Page&#039;s contact info and call-to-action button. </p></div></td><td><div><p>day, week, days_28</p></div></td></tr></tbody></table></div><h3 id="page-engagement">Page Engagement</h3>
+<div class="_57yz _57z1 _3-8p"><div class="_57y-"><p>The &quot;like&quot; reaction counts include both &quot;like&quot; and &quot;care&quot; reactions.</p>
+</div></div><div class="_57-c"><table class="_4-ss _5k9x"><thead><tr><th> Metric Name </
