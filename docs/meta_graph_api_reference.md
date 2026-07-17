@@ -266,6 +266,35 @@ manually-specified date range, etc.). `ROADMAP.md`'s Phase 0 "confirmed
 successful run" checkbox has been reopened pending this — see
 `ROADMAP.md`. The CSV files themselves have not been modified or deleted.
 
+### 8.1 Addendum (2026-07-17) — live run produces fb_page_insights.csv at repo root
+
+A live end-to-end run of `scripts/run_fb_page_extraction.py` at 2026-07-17
+17:48 wrote its output to `fb_page_insights.csv` at the repo root (2051
+bytes, 7 rows covering 2026-07-10 through 2026-07-16). This confirms the
+script's hardcoded output path (`scripts/run_fb_page_extraction.py` lines
+23-25: `os.path.join(os.path.dirname(__file__), "..", "fb_page_insights.csv")`).
+
+The stale file at `scripts/output/run_fb_page_extraction_output.csv` (456
+bytes, last modified 2026-07-14 20:06) was **not** touched by this run. Its
+provenance remains unexplained — see the main §8 analysis above. The byte
+identity previously noted between the two files is now **broken**: the live
+file and the stale file differ in size (2051 vs 456 bytes) and content.
+
+**Implications for the open provenance question:**
+- The root-level `fb_page_insights.csv` is now demonstrably the script's
+  genuine output from a live run on 2026-07-17. This does **not** explain
+  the 13-row, 456-byte file at `scripts/output/` or its earlier mtime
+  paradox — those facts remain unresolved and are consistent with the
+  "manually assembled" theory described in §8.
+- The old 13-row `fb_page_insights.csv` (the one that was byte-identical to
+  `scripts/output/run_fb_page_extraction_output.csv`) was overwritten by
+  this live run and is no longer present in the working tree. It remains
+  recoverable from git history — it was committed at commit `495900a`
+  (2026-07-16 17:10:36) per the original §8 finding — via
+  `git show 495900a:fb_page_insights.csv`. Whether to restore it for
+  further investigation, or treat the new live-data file as the correct
+  ongoing baseline, is an open decision not made here.
+
 ## 9. Explicitly out of scope
 
 Ads Insights, Post-level metrics, and breakdowns/`fields` params were never

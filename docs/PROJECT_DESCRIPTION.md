@@ -135,7 +135,13 @@ Meta Dashboard Pipeline/
    confirmed 1:1 migration — see `docs/metric_reference_fb_page.md`).
    Saved output at `scripts/output/diagnose_page_fans_output.txt`.
 4. Has `run_fb_page_extraction.py` ever completed a successful end-to-end
-   run? No CSV output or log currently exists in the repo.
+   run? Yes — confirmed 2026-07-17 17:48. The script's hardcoded output
+   path (scripts/run_fb_page_extraction.py lines 23-25) writes to
+   fb_page_insights.csv at repo root, which now exists with 2051 bytes
+   of live API data covering 7 dates. This resolves the original question
+   but does not explain the stale 456-byte file at
+   scripts/output/run_fb_page_extraction_output.csv (unchanged since
+   2026-07-14 20:06) — see docs/meta_graph_api_reference.md §8 Addendum.
 
 ## Working Method & Tools
 

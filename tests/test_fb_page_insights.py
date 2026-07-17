@@ -8,9 +8,11 @@ sys.path.insert(
 )
 
 from fb_page_insights import (  # noqa: E402
+    DAYS_28_METRICS,
     DEFAULT_METRICS,
     extract_page_insights,
     fetch_page_insights_raw,
+    merge_insights_rows,
     parse_insights_response,
 )
 
@@ -117,6 +119,99 @@ def test_fetch_passes_correct_date_range_and_params(monkeypatch):
     assert "period=day" in url
     assert "limit=100" in url
     assert "metric=page_media_view%2Cpage_total_media_view_unique%2Cpage_views_total%2Cpage_follows" in url
+
+
+REALISTIC_DAYS_28_RESPONSE = {
+    "data": [
+        {
+            "name": "page_total_media_view_unique",
+            "period": "days_28",
+            "values": [
+                {"value": 220, "end_time": "2026-06-18T07:00:00+0000"},
+                {"value": 230, "end_time": "2026-06-20T07:00:00+0000"},
+            ],
+        },
+    ],
+    "paging": {},
+}
+
+
+def test_merge_insights_rows_combines_both_periods():
+    day_rows = parse_insights_response(REALISTIC_RESPONSE)
+    days_28_rows = parse_insights_response(
+        REALISTIC_DAYS_28_RESPONSE, metrics=DAYS_28_METRICS
+    )
+
+    merged, columns = merge_insights_rows(day_rows, days_28_rows)
+
+    # Column list should have suffixed names in expected order.
+    assert columns == [
+        "page_media_view",
+        "page_views_total",
+        "page_follows",
+        "page_total_media_view_unique_day",
+        "page_total_media_view_unique_days_28",
+    ]
+
+    assert len(merged) == 3  # 3 distinct dates across both periods
+
+    # 2026-06-18: present in both periods.
+    assert merged[0] == {
+        "date": "2026-06-18",
+        "page_media_view": 100,
+        "page_views_total": 5,
+        "page_follows": 1000,
+        "page_total_media_view_unique_day": 200,
+        "page_total_media_view_unique_days_28": 220,
+    }
+
+    # 2026-06-19: day-only date.
+    assert merged[1] == {
+        "date": "2026-06-19",
+        "page_media_view": 110,
+        "page_views_total": 7,
+        "page_follows": 1001,
+        "page_total_media_view_unique_day": 210,
+        "page_total_media_view_unique_days_28": None,
+    }
+
+    # 2026-06-20: days_28-only date.
+    assert merged[2] == {
+        "date": "2026-06-20",
+        "page_media_view": None,
+        "page_views_total": None,
+        "page_follows": None,
+        "page_total_media_view_unique_day": None,
+        "page_total_media_view_unique_days_28": 230,
+    }
+
+
+def test_merge_insights_rows_handles_empty_days_28():
+    day_rows = parse_insights_response(REALISTIC_RESPONSE)
+    merged, columns = merge_insights_rows(day_rows, [])
+
+    assert columns == [
+        "page_media_view",
+        "page_views_total",
+        "page_follows",
+        "page_total_media_view_unique_day",
+        "page_total_media_view_unique_days_28",
+    ]
+    assert len(merged) == 2
+    for row in merged:
+        assert row["page_total_media_view_unique_days_28"] is None
+
+
+def test_merge_insights_rows_handles_empty_day():
+    days_28_rows = parse_insights_response(
+        REALISTIC_DAYS_28_RESPONSE, metrics=DAYS_28_METRICS
+    )
+    merged, columns = merge_insights_rows([], days_28_rows)
+
+    assert len(merged) == 2
+    for row in merged:
+        assert row["page_total_media_view_unique_day"] is None
+        assert row["page_total_media_view_unique_days_28"] is not None
 
 
 def test_extract_page_insights_combines_fetch_and_parse(monkeypatch):

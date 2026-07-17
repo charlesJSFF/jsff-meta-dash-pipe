@@ -21,9 +21,10 @@ _Last updated: July 2026, following a full repo survey._
   - diagnose_token_190.py — what did the 4 calls actually find about error 190?
   - diagnose_candidate_page_metrics.py — which of the 8 candidate metrics passed?
   - diagnose_page_fans.py — did the token exchange change the outcome?
-- [ ] Confirmed: run_fb_page_extraction.py completed successfully with
+- [x] Confirmed: run_fb_page_extraction.py completed successfully with
       corrected FB Page metric names. CSV output saved at
-      scripts/output/run_fb_page_extraction_output.csv.
+      fb_page_insights.csv (repo root) — the script's hardcoded output
+      path (scripts/run_fb_page_extraction.py line 23-25).
       **Reopened 2026-07-16** — the script as currently written always
       requests exactly a 7-day window, but the saved CSV has 13 rows
       spanning dates that partly postdate the file's own creation
