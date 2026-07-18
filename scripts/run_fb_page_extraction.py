@@ -1,5 +1,5 @@
 """
-Entry point: pull the last 7 days of FB Page daily insights and write them
+Entry point: pull recent FB Page daily insights and write them
 to a CSV file. Also pulls page_total_media_view_unique at period=days_28
 (same-cadence rolling sum) and merges both into a single output.
 """

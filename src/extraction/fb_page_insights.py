@@ -101,9 +101,32 @@ def fetch_page_insights_raw(
 
     merged_data: List[dict] = []
     next_url: Optional[str] = url
+    until_str = _format_date(until)
+
     while next_url:
         page = _http_get_json(next_url)
-        merged_data.extend(page.get("data", []))
+        page_data = page.get("data", [])
+
+        # If any metric entry in this page has values whose end_time
+        # exceeds the caller's until date, stop pagination and skip
+        # this page entirely.  The API's paging.next links advance in
+        # time past the original until, and following them would inject
+        # future-dated placeholder rows (zeros for day metrics, stale
+        # cumulative values for lifetime metrics) into the output.
+        past_horizon = False
+        for entry in page_data:
+            for value_entry in entry.get("values", []):
+                end_time = (value_entry.get("end_time") or "")[:10]
+                if end_time and end_time > until_str:
+                    past_horizon = True
+                    break
+            if past_horizon:
+                break
+
+        if past_horizon:
+            break
+
+        merged_data.extend(page_data)
         next_url = page.get("paging", {}).get("next")
 
     return {"data": merged_data}

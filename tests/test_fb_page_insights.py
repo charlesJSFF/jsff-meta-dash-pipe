@@ -214,6 +214,50 @@ def test_merge_insights_rows_handles_empty_day():
         assert row["page_total_media_view_unique_days_28"] is not None
 
 
+def test_fetch_stops_at_until_date(monkeypatch):
+    """fetch_page_insights_raw must not include data whose end_time
+    exceeds the caller's until date. This guards against the API's
+    paging.next links advancing past the original until and injecting
+    future-dated placeholder rows."""
+
+    captured_urls = []
+
+    FAKE_FIRST_PAGE = {
+        "data": [
+            {"name": "page_media_view", "values": [{"value": 100, "end_time": "2026-07-17T07:00:00+0000"}]},
+        ],
+        "paging": {"next": "https://graph.facebook.com/v25.0/123/insights?since=1784444400&until=1785052800"},
+    }
+
+    FAKE_SECOND_PAGE = {
+        "data": [
+            {"name": "page_media_view", "values": [{"value": 0, "end_time": "2026-07-25T07:00:00+0000"}]},
+        ],
+        "paging": {},
+    }
+
+    def fake_http_get_json(url):
+        captured_urls.append(url)
+        if len(captured_urls) == 1:
+            return FAKE_FIRST_PAGE
+        return FAKE_SECOND_PAGE
+
+    monkeypatch.setattr("fb_page_insights._http_get_json", fake_http_get_json)
+
+    result = fetch_page_insights_raw(
+        page_id="123",
+        access_token="tok",
+        since="2026-07-10",
+        until="2026-07-18",
+    )
+
+    # The second page was fetched (its URL was visited), but its data
+    # (2026-07-25) exceeds until (2026-07-18) so it must be discarded.
+    assert len(captured_urls) == 2
+    assert len(result["data"]) == 1
+    assert result["data"][0]["name"] == "page_media_view"
+
+
 def test_extract_page_insights_combines_fetch_and_parse(monkeypatch):
     def fake_http_get_json(url):
         return REALISTIC_RESPONSE
