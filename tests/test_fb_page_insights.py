@@ -60,14 +60,14 @@ def test_parses_realistic_response_into_expected_rows():
 
     assert rows == [
         {
-            "date": "2026-06-18",
+            "date": "2026-06-17",
             "page_media_view": 100,
             "page_total_media_view_unique": 200,
             "page_views_total": 5,
             "page_follows": 1000,
         },
         {
-            "date": "2026-06-19",
+            "date": "2026-06-18",
             "page_media_view": 110,
             "page_total_media_view_unique": 210,
             "page_views_total": 7,
@@ -155,9 +155,9 @@ def test_merge_insights_rows_combines_both_periods():
 
     assert len(merged) == 3  # 3 distinct dates across both periods
 
-    # 2026-06-18: present in both periods.
+    # 2026-06-17: present in both periods.
     assert merged[0] == {
-        "date": "2026-06-18",
+        "date": "2026-06-17",
         "page_media_view": 100,
         "page_views_total": 5,
         "page_follows": 1000,
@@ -165,9 +165,9 @@ def test_merge_insights_rows_combines_both_periods():
         "page_total_media_view_unique_days_28": 220,
     }
 
-    # 2026-06-19: day-only date.
+    # 2026-06-18: day-only date.
     assert merged[1] == {
-        "date": "2026-06-19",
+        "date": "2026-06-18",
         "page_media_view": 110,
         "page_views_total": 7,
         "page_follows": 1001,
@@ -175,9 +175,9 @@ def test_merge_insights_rows_combines_both_periods():
         "page_total_media_view_unique_days_28": None,
     }
 
-    # 2026-06-20: days_28-only date.
+    # 2026-06-19: days_28-only date.
     assert merged[2] == {
-        "date": "2026-06-20",
+        "date": "2026-06-19",
         "page_media_view": None,
         "page_views_total": None,
         "page_follows": None,
@@ -272,4 +272,5 @@ def test_extract_page_insights_combines_fetch_and_parse(monkeypatch):
     )
 
     assert len(rows) == 2
-    assert rows[0]["date"] == "2026-06-18"
+    assert rows[0]["date"] == "2026-06-17"
+    assert rows[1]["date"] == "2026-06-18"

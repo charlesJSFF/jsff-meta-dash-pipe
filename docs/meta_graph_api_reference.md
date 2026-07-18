@@ -189,6 +189,12 @@ transformation layer is built (`src/transformation/`, currently empty).
 - **Missing-vs-zero ambiguity** — an empty insights value for a given day
   is indistinguishable from a real zero. Known deferred gap per
   `PROJECT_DESCRIPTION.md`.
+- **Daily Insights end_time offset (date label vs. reporting date) has
+  only been verified against July (PDT) data** — the `end_time` is
+  consistently one calendar day ahead of the actual reporting date for a
+  day-period response, consistent with a UTC-7 anchor. If a winter (PST /
+  UTC-8) sample is ever pulled, confirm the offset is still exactly one
+  day (not two, not same-day) before assuming the fix holds year-round.
 - **~28-day data-finalization lag** — Meta's insights reprocess for about
   28 days after the fact. `run_fb_page_extraction_output.csv` shows 5
   trailing days of all-zero values for `page_media_view` /

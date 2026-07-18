@@ -18,7 +18,7 @@ import json
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import date
+from datetime import date, datetime, timedelta
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 GRAPH_API_VERSION = "v25.0"
@@ -156,9 +156,23 @@ def parse_insights_response(
             continue
         for value_entry in metric_entry.get("values", []):
             end_time = value_entry.get("end_time", "")
-            row_date = end_time[:10] if end_time else None
-            if row_date is None:
+            if not end_time:
                 continue
+            # end_time for daily-period Insights is consistently one
+            # calendar day ahead of the actual reporting date (the data
+            # FOR day X has an end_time on day X+1 at 07:00:00+0000).
+            # This is consistent with a UTC-7 anchor (matches Pacific
+            # Daylight Time for the July samples checked).  Subtracting
+            # one day via timedelta (not string manipulation) gives the
+            # correct reporting date, handling month/year boundaries
+            # correctly.
+            #
+            # Caveat: only confirmed against July (PDT) data so far.
+            # If a winter (PST / UTC-8) sample is ever pulled, verify
+            # the offset is still exactly one day (not two, not same-day)
+            # before assuming this fix holds year-round.
+            dt = datetime.strptime(end_time[:10], "%Y-%m-%d")
+            row_date = (dt - timedelta(days=1)).strftime("%Y-%m-%d")
             row = rows_by_date.setdefault(row_date, {"date": row_date})
             row[metric_name] = value_entry.get("value")
 
