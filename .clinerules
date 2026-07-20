@@ -149,3 +149,32 @@ failed:
 ## No Self-Initiated Verification Commands
 
 Do not run your own follow-up shell commands to verify work you just completed (e.g. re-reading an output file via python -c, cat, or similar) unless the task's acceptance criteria explicitly require it. If verification is genuinely needed, use the read-only file-view tool instead of a shell command, since shell commands may require manual approval that stalls the task. Report what you did and let the user confirm, rather than adding your own confirmation step.
+
+## Commit Discipline (Autonomy Safety Net)
+
+Now that Cline has "Edit files" auto-approve enabled (workspace-scoped
+only — "Edit all files" stays off), commits are the primary rollback and
+diff-inspection mechanism, replacing manual per-edit approval as the
+safety net. Follow this exactly:
+
+- **Commit after every confirmed piece, not per session.** A "piece" is
+  whatever unit was scoped in the current prompt's Acceptance Criteria —
+  do not let multiple pieces accumulate uncommitted, even within a single
+  active session. If a session covers two pieces, that's two commits.
+- **Tests must pass before committing.** Do not commit a piece whose
+  corresponding test file is failing or missing. "Confirmed" means tests
+  green, not just "the code ran once."
+- **Commit messages must name the piece and its scope**, not just
+  restate the prompt verbatim — e.g. `Add page_views_total to FB Page
+  extraction DEFAULT_METRICS` rather than `update fb_page_insights.py`.
+  This is what makes `git diff <commit>~1 <commit>` actually legible
+  later, including to a different agent (Claude Code) auditing the
+  history.
+- **Never bundle unrelated changes into one commit** (e.g. a metric fix
+  and a docstring cleanup) even if both happened in the same session —
+  split into separate commits so a future diff isolates cause from
+  incidental cleanup.
+- **If a piece's tests can't be made to pass within the current task,
+  stop and ask rather than committing anyway** — an uncommitted broken
+  state is recoverable by discarding working-tree changes; a committed
+  broken state pollutes the history you're relying on for rollback.

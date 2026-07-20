@@ -68,7 +68,8 @@ Meta Dashboard Pipeline/
   deprecated `page_impressions_*` / `page_fans_*` / `page_posts_impressions_*`
   families, plus 4 monetization metrics requiring admin access). The
    pipeline's actual metrics (`page_media_view`, `page_total_media_view_unique`,
-  `page_views_total`, `page_follows`) are valid FB Page Insights metric names.
+   `page_views_total`, `page_follows`, `page_post_engagements`) are valid FB Page
+   Insights metric names.
   (These replaced earlier IG-derived names — `reach`, `impressions`,
   `follower_count` — that caused HTTP 400 errors against the FB endpoint.)
 - **Instagram Media extraction:** not started. `IG_USER_ID` exists in config

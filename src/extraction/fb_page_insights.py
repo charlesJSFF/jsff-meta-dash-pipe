@@ -24,7 +24,7 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Union
 GRAPH_API_VERSION = "v25.0"
 GRAPH_API_BASE = f"https://graph.facebook.com/{GRAPH_API_VERSION}"
 
-DEFAULT_METRICS: Sequence[str] = ("page_media_view", "page_total_media_view_unique", "page_views_total", "page_follows")
+DEFAULT_METRICS: Sequence[str] = ("page_media_view", "page_total_media_view_unique", "page_views_total", "page_follows", "page_post_engagements")
 
 # Metrics to pull at period=days_28 (same-cadence daily rolling sum, not
 # calendar-month buckets -- see docs/meta_graph_api_reference.md sec 6).
@@ -190,8 +190,9 @@ def merge_insights_rows(
     Returns (merged_rows, merged_columns) where merged_columns is suitable
     for passing as the ``metrics`` parameter to write_insights_csv().
 
-    Column order: date, page_media_view, page_views_total, page_follows,
-    page_total_media_view_unique_day, page_total_media_view_unique_days_28.
+    Column order: date, page_media_view, page_views_total, page_post_engagements,
+    page_follows, page_total_media_view_unique_day,
+    page_total_media_view_unique_days_28.
 
     Days present in only one period appear with the other period's value as
     None (outer-join semantics).
@@ -210,6 +211,7 @@ def merge_insights_rows(
             "date": d,
             "page_media_view": day_row.get("page_media_view"),
             "page_views_total": day_row.get("page_views_total"),
+            "page_post_engagements": day_row.get("page_post_engagements"),
             "page_follows": day_row.get("page_follows"),
             "page_total_media_view_unique_day": day_row.get("page_total_media_view_unique"),
             "page_total_media_view_unique_days_28": days_28_by_date.pop(d, None),
@@ -223,6 +225,7 @@ def merge_insights_rows(
                 "date": d,
                 "page_media_view": None,
                 "page_views_total": None,
+                "page_post_engagements": None,
                 "page_follows": None,
                 "page_total_media_view_unique_day": None,
                 "page_total_media_view_unique_days_28": val,
@@ -234,6 +237,7 @@ def merge_insights_rows(
     merged_columns = [
         "page_media_view",
         "page_views_total",
+        "page_post_engagements",
         "page_follows",
         "page_total_media_view_unique_day",
         "page_total_media_view_unique_days_28",

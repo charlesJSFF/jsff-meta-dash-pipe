@@ -50,6 +50,14 @@ REALISTIC_RESPONSE = {
                 {"value": 1001, "end_time": "2026-06-19T07:00:00+0000"},
             ],
         },
+        {
+            "name": "page_post_engagements",
+            "period": "day",
+            "values": [
+                {"value": 50, "end_time": "2026-06-18T07:00:00+0000"},
+                {"value": 75, "end_time": "2026-06-19T07:00:00+0000"},
+            ],
+        },
     ],
     "paging": {},
 }
@@ -65,6 +73,7 @@ def test_parses_realistic_response_into_expected_rows():
             "page_total_media_view_unique": 200,
             "page_views_total": 5,
             "page_follows": 1000,
+            "page_post_engagements": 50,
         },
         {
             "date": "2026-06-18",
@@ -72,6 +81,7 @@ def test_parses_realistic_response_into_expected_rows():
             "page_total_media_view_unique": 210,
             "page_views_total": 7,
             "page_follows": 1001,
+            "page_post_engagements": 75,
         },
     ]
 
@@ -118,7 +128,7 @@ def test_fetch_passes_correct_date_range_and_params(monkeypatch):
     assert "until=2026-06-18" in url
     assert "period=day" in url
     assert "limit=100" in url
-    assert "metric=page_media_view%2Cpage_total_media_view_unique%2Cpage_views_total%2Cpage_follows" in url
+    assert "metric=page_media_view%2Cpage_total_media_view_unique%2Cpage_views_total%2Cpage_follows%2Cpage_post_engagements" in url
 
 
 REALISTIC_DAYS_28_RESPONSE = {
@@ -148,6 +158,7 @@ def test_merge_insights_rows_combines_both_periods():
     assert columns == [
         "page_media_view",
         "page_views_total",
+        "page_post_engagements",
         "page_follows",
         "page_total_media_view_unique_day",
         "page_total_media_view_unique_days_28",
@@ -160,6 +171,7 @@ def test_merge_insights_rows_combines_both_periods():
         "date": "2026-06-17",
         "page_media_view": 100,
         "page_views_total": 5,
+        "page_post_engagements": 50,
         "page_follows": 1000,
         "page_total_media_view_unique_day": 200,
         "page_total_media_view_unique_days_28": 220,
@@ -170,6 +182,7 @@ def test_merge_insights_rows_combines_both_periods():
         "date": "2026-06-18",
         "page_media_view": 110,
         "page_views_total": 7,
+        "page_post_engagements": 75,
         "page_follows": 1001,
         "page_total_media_view_unique_day": 210,
         "page_total_media_view_unique_days_28": None,
@@ -180,6 +193,7 @@ def test_merge_insights_rows_combines_both_periods():
         "date": "2026-06-19",
         "page_media_view": None,
         "page_views_total": None,
+        "page_post_engagements": None,
         "page_follows": None,
         "page_total_media_view_unique_day": None,
         "page_total_media_view_unique_days_28": 230,
@@ -193,6 +207,7 @@ def test_merge_insights_rows_handles_empty_days_28():
     assert columns == [
         "page_media_view",
         "page_views_total",
+        "page_post_engagements",
         "page_follows",
         "page_total_media_view_unique_day",
         "page_total_media_view_unique_days_28",
