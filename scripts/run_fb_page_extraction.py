@@ -55,7 +55,7 @@ def main() -> None:
     merged_rows, merged_columns = merge_insights_rows(day_rows, days_28_rows)
 
     write_insights_csv(merged_rows, OUTPUT_PATH, metrics=merged_columns)
-    print(f"Wrote {len(merged_rows)} row(s) to {OUTPUT_PATH}")
+    print(f"Wrote {len(merged_rows)} row(s) to {os.path.normpath(OUTPUT_PATH)}")
 
 
 if __name__ == "__main__":
